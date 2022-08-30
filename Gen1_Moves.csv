@@ -1,0 +1,70 @@
+Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
+1,Fire Punch,Fire,Physical,Tough,15,75,100,1
+2,Ice Punch,Ice,Physical,Beautiful,15,75,100,1
+3,Gust,Flying,Special,Clever,35,40,100,1
+4,Wing Attack,Flying,Physical,Cool,35,60,100,1
+5,Stomp,Normal,Physical,Tough,20,65,100,1
+6,Double Kick,Fighting,Physical,Cool,30,60,100,1
+7,Mega Kick,Normal,Physical,Cool,5,120,75,1
+8,Hi Jump Kick,Fighting,Physical,Cool,10,100,95,1
+9,Headbutt,Normal,Physical,Tough,15,70,100,1
+10,Horn Attack,Normal,Physical,Cool,25,65,100,1
+11,Tackle,Normal,Physical,Tough,35,40,None,1
+12,Body Slam,Normal,Physical,Tough,15,85,100,1
+13,Take Down,Normal,Physical,Tough,20,90,85,1
+14,Double-Edge,Normal,Physical,Tough,15,120,100,1
+15,Twineedle,Bug,Physical,Cool,20,25,100,1
+16,Pin Missile,Bug,Physical,Cool,20,25,None,1
+18,Growl,Normal,Status,Cute,40,50,100,1
+19,Sing,Normal,Status,Cute,15,None,55,1
+20,Acid,Poison,Special,Clever,30,40,100,1
+21,Flamethrower,Fire,Special,Beautiful,15,90,100,1
+22,Hydro Pump,Water,Special,Beautiful,5,110,80,1
+23,Surf,Water,Special,Beautiful,15,90,100,1
+24,Ice Beam,Ice,Special,Beautiful,10,90,100,1
+24,Icy Wind,Ice,Special,Beautiful,10,55,95,1
+25,Blizzard,Ice,Special,Beautiful,5,110,70,1
+26,Psybeam,Psychic,Special,Beautiful,20,65,100,1
+27,Aurora Beam,Ice,Special,Beautiful,20,65,100,1
+28,Hyper Beam,Normal,Special,Cool,5,150,90,1
+29,Drill Peck,Flying,Physical,Cool,20,80,100,1
+30,Submission,Fighting,Physical,Cool,20,80,80,1
+31,Seismic Toss,Fighting,Physical,Tough,20,100,100,1
+32,Strength,Normal,Physical,Tough,15,80,100,1(BAD)
+33,Growth,Normal,Status,Beautiful,20,60,None,1
+34,Razor Leaf,Grass,Physical,Cool,25,55,95,1
+35,Solar Beam,Grass,Special,Cool,10,120,100,1
+36,Stun Spore,Grass,Status,Clever,30,65,75,1
+37,Sleep Powder,Grass,Status,Clever,15,90,75,1
+38,Petal Dance,Grass,Special,Beautiful,10,70,100,1
+39,Thunderbolt,Electric,Special,Cool,15,90,100,1
+40,Thunder Wave,Electric,Status,Cool,20,None,100,1
+41,Thunder,Electric,Special,Cool,10,110,70,1
+42,Rock Throw,Rock,Physical,Tough,15,50,None,1
+43,Earthquake,Ground,Physical,Tough,10,100,100,1
+44,Dig,Ground,Physical,Tough,10,60,100,1
+45,Confusion,Psychic,Special,Clever,25,50,100,1
+46,Psychic,Psychic,Special,Clever,10,90,100,1
+47,Quick Attack,Normal,Physical,Cool,30,40,100,1
+48,Defense Curl,Normal,Status,Cute,40,20,None,1
+49,Focus Energy,Normal,Status,Cool,30,80,None,1
+50,Selfdestruct,Normal,Physical,Beautiful,5,200,100,1
+51,Egg Bomb,Normal,Physical,Cute,10,100,75,1
+52,Sludge,Poison,Special,Tough,20,65,100,1
+52,Sludge Bomb,Poison,Special,Tough,20,65,100,1
+53,Fire Blast,Fire,Special,Beautiful,5,110,85,1
+54,Waterfall,Water,Physical,Tough,15,80,100,1
+55,Swift,Normal,Special,Cool,20,60,None,1
+56,Leech Life,Bug,Physical,Clever,10,80,100,1
+56,Dragonbreath,Dragon,Special,Clever,10,80,100,1
+57,Transform,Normal,Status,Clever,10,None,None,1
+58,Dizzy Punch,Normal,Physical,Cute,10,70,100,1
+59,Splash,Normal,Status,Cute,40,1,None,1
+60,Crabhammer,Water,Physical,Tough,10,100,None,1
+61,Bonemerang,Ground,Physical,Tough,10,120,90,1
+62,Rock Slide,Rock,Physical,Tough,10,75,90,1
+63,Hyper Fang,Normal,Physical,Cool,15,80,90,1
+64,Tri Attack,Normal,Special,Beautiful,10,80,100,1
+65,Super Fang,Normal,Physical,Tough,10,100,90,1
+66,Slash,Normal,Physical,Cool,20,70,100,1
+67,Fury Cutter,Bug,Physical,Cool,35,40,100,1
