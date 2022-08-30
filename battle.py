@@ -1,4 +1,4 @@
-import sys, random
+import sys, random, math
 from argparse import ArgumentParser
 from Players import HumanPlayer, ComputerPlayer
 from Constants import Statuses
@@ -49,7 +49,7 @@ class Battle:
         else:
             return True
 
-    def mobility(self, pokemon):
+    def is_mobile(self, pokemon):
         """ Determines whether or not a paralyzed, frozen, or sleeping Pokemon
         will be able to move this turn.
         
@@ -64,9 +64,12 @@ class Battle:
             May print something if the Pokemon is immobile this turn or its
             status changes.
         """
+        # Make functions out of repeated code (eventually)
         status = pokemon.getStatus()
         name = pokemon.getName()
-        if status == Statuses.PRZ:
+        if status == Statuses.HEALTHY:
+            return True
+        elif status == Statuses.PRZ:
             PRZ_roll = random.randint(0,3)
             if PRZ_roll == 0:
                 print(name + " is fully paralyzed!")
@@ -90,7 +93,7 @@ class Battle:
                     print(name + " is fast asleep!")
                     pokemon.incrementInflictedTurns()
                     return False
-            elif sleeping_turns == 3:
+            else: # sleeping_turns == 3
                 print(name + " woke up!")
                 pokemon.setStatus(Statuses.HEALTHY)
                 pokemon.resetInflictedTurns()
@@ -105,6 +108,21 @@ class Battle:
             else:
                 print(name + " is frozen solid!")
                 return False
+        else: # status == (TOX, PSN, OR BRN)
+            return True
+    
+    def chip_damage(self, status, pokemon):
+        if status == Statuses.BRN or status == Statuses.PSN:
+            damage = math.floor(pokemon.getMaxHP() * 0.125)
+            pokemon.setCurrentHP(damage)
+            pokemon.incrementInflictedTurns()
+        else: # status == TOX
+            mutliplier = pokemon.getInflictedTurns() + 1
+            tox_multiplier = math.floor(0.0625 * mutliplier)
+            damage = pokemon.getMaxHP() * tox_multiplier
+            pokemon.setCurrentHP(tox_multiplier)
+            pokemon.incrementInflictedTurns()
+
     def start(self):
         """ This is the function that handles the battle.
 
@@ -126,40 +144,54 @@ class Battle:
         while True:
             print()
             if p1_speed >= p2_speed:
-                """if (p1_pkmn.getStatus() == Statuses.FRZ or
-                p1_pkmn.getStatus() == Statuses.SLP or
-                p1_pkmn.getStatus() == Statuses.PRZ):"""
-                print(self.player1)
-                print()
-                self.player1.take_turn(p2_pkmn)
-                p2_HP = p2_pkmn.getCurrentHP()
-                battle_over = self.is_game_over(p2_HP)
-                if battle_over:
-                    break
-            
-                print(self.player2)
-                print()
-                self.player2.take_turn(p1_pkmn)
-                p1_HP = p1_pkmn.getCurrentHP()
-                battle_over = self.is_game_over(p1_HP)
-                if battle_over:
-                    break
+                # p1 turn
+                if self.is_mobile(p1_pkmn):
+                    print(self.player1)
+                    print()
+                    self.player1.take_turn(p2_pkmn)
+                    p2_HP = p2_pkmn.getCurrentHP()
+                    battle_over = self.is_game_over(p2_HP)
+                    if battle_over:
+                        break
+                # p2 turn
+                if self.is_mobile(p2_pkmn):
+                    print(self.player2)
+                    print()
+                    self.player2.take_turn(p1_pkmn)
+                    p1_HP = p1_pkmn.getCurrentHP()
+                    battle_over = self.is_game_over(p1_HP)
+                    if battle_over:
+                        break
             else:
-                print(self.player2)
-                print()
-                self.player2.take_turn(p1_pkmn)
-                p1_HP = p1_pkmn.getCurrentHP()
-                battle_over = self.is_game_over(p1_HP)
-                if battle_over:
-                    break
-
-                print(self.player1)
-                print()
-                self.player1.take_turn(p2_pkmn)
-                p2_HP = p2_pkmn.getCurrentHP()
-                battle_over = self.is_game_over(p2_HP)
-                if battle_over:
-                    break
+                # p2 turn
+                if self.is_mobile(p2_pkmn):
+                    print(self.player2)
+                    print()
+                    self.player2.take_turn(p1_pkmn)
+                    p1_HP = p1_pkmn.getCurrentHP()
+                    battle_over = self.is_game_over(p1_HP)
+                    if battle_over:
+                        break
+                # p1 turn
+                if self.is_mobile(p1_pkmn):
+                    print(self.player1)
+                    print()
+                    self.player1.take_turn(p2_pkmn)
+                    p2_HP = p2_pkmn.getCurrentHP()
+                    battle_over = self.is_game_over(p2_HP)
+                    if battle_over:
+                        break
+                # psn, tox, or burn check (and decrement)
+                if p1_pkmn.getStatus() in Statuses.CHIP_DAMAGE:
+                    self.chip_damage(p1_pkmn.getStatus(), p1_pkmn)
+                    battle_over = self.is_game_over(p1_HP)
+                    if battle_over:
+                        break
+                if p2_pkmn.getStatus() in Statuses.CHIP_DAMAGE:
+                    self.chip_damage(p2_pkmn.getStatus(), p2_pkmn)
+                    battle_over = self.is_game_over(p2_HP)
+                    if battle_over:
+                        break
         print()
         if p1_pkmn.getCurrentHP() == 0:
             print(p1_pkmn.getName() + " fainted.")

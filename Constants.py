@@ -95,6 +95,9 @@ class Statuses:
     SLP = "Sleep"
     FRZ = "Freeze"
 
+    IMMOBILIZERS = [PRZ, SLP, FRZ]
+    CHIP_DAMAGE = [PSN, BRN, TOX]
+
     SLP_INFLICT = ["Sing"]
     PRZ_INFLICT = ["Thunder Wave"]
 
