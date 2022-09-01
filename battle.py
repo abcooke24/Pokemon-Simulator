@@ -15,7 +15,7 @@ from Constants import Statuses
             - Proper status checks (done)
             - Stat boosts/drops (done)
         - More Pokemon
-        - 3v3 format
+        - 2v2 format
         - Smarter AI (!)
         - Misc improvements/implementations
         
