@@ -12,13 +12,25 @@ class Pokemon:
         name (str) = this Pokemon's name
         types (str List) = this Pokemon's types. If it only has one type,
         the second type will be "None"
+        status (str): String representing this Pokemon's status condition; will
+        be "Healthy" by default.
+        inflicted_turns (int): The # of turns this Pokemon has been inflicted
+        with a status condition for. Relevant for TOX and SLP
+        EVs (int List): this Pokemon's Effort Values
+        IVs (int List): this Pokemon's Individual Values
+        nature (str List): string list representing this Pokemon's nature
         maxHP (int) = the starting # of hit points
-        currentHP (int) = the # of hit points this Pokemon has left
         attack (int) = this Pokemon's attack stat
         defense (int) = this Pokemon's defense stat
         spatk (int) = this Pokemon's special attack stat
         spdef (int) = this Pokemon's special defense stat
         speed (int) = this Pokemon's speed stat
+        currentHP (int) = the # of hit points this Pokemon has left
+        currentAttack (int) = this Pokemon's attack stat after boosts/drops
+        currentDefense (int) = this Pokemon's defense stat after boosts/drops
+        currentSpAtk (int) = this Pokemon's special attack stat after boosts/drops
+        currentSpDef (int) = this Pokemon's special defense stat after boosts/drops
+        currentSpeed (int) = this Pokemon's speed stat after boosts/drops
         moves (list of moves) = the moves this Pokemon has
     """
 
@@ -38,17 +50,24 @@ class Pokemon:
         self.status = Statuses.HEALTHY
         self.inflicted_turns = 0
 
-        # Sets stats with the setStats
+        # Sets stats with the setStats; not subject to change
         self.EVs = self.setEVs()
         self.IVs = self.setIVs()
         self.nature = Natures.nature_list.copy()[random.randint(0,24)]
         self.maxHP = self.setStats(int(info.values[4]), "HP")
-        self.currentHP = self.maxHP * 1
         self.attack = self.setStats(int(info.values[5]), "Attack")
         self.defense = self.setStats(int(info.values[6]), "Defense")
         self.spatk = self.setStats(int(info.values[7]), "SpAtk")
         self.spdef = self.setStats(int(info.values[8]), "SpDef")
         self.speed = self.setStats(int(info.values[9]), "Speed")
+
+        # This Pokemon's CURRENT stats; subject to change during battle
+        self.currentHP = self.maxHP * 1
+        self.currentAttack = self.attack * 1
+        self.currentDefense = self.defense * 1
+        self.currentSpAtk = self.spatk * 1
+        self.currentSpDef = self.spdef * 1
+        self.currentSpeed = self.speed * 1
 
         # A different function will construct each move
         self.moves = self.setMoves((
@@ -223,6 +242,74 @@ class Pokemon:
         self.currentHP -= damage
         if self.currentHP < 0:
             self.currentHP = 0
+
+    def setCurrentStat(self, statname, stages):
+        """ Boosts or drops a current stat based on the opponent's move. The
+        resulting current stat will be a whole number.
+        
+        Parameters:
+            statname (str): the name of the stat being affected
+            stages (float): the # of stages that the specified stat will be
+            boosted or dropped by (usually 1 or 2)
+
+        Side Effects:
+            Alters a current stat accordingly
+        """
+        if statname == "Attack":
+            net_change = math.floor(self.attack * (stages/6))
+            if net_change > 0:
+                print(self.name + "'s attack rose!")
+            elif net_change < 0:
+                print(self.name + "'s attack fell!")
+            self.currentAttack += net_change
+            if self.currentAttack > self.attack * 6:
+                self.currentAttack = self.attack * 6
+            elif self.currentAttack < self.attack / 6:
+                self.currentAttack = self.attack / 6
+        if statname == "Defense":
+            net_change = math.floor(self.defense * (stages/6))
+            if net_change > 0:
+                print(self.name + "'s defense rose!")
+            elif net_change < 0:
+                print(self.name + "'s defense fell!")
+            self.currentDefense += net_change
+            if self.currentDefense > self.defense * 6:
+                self.currentDefense = self.defense * 6
+            elif self.currentDefense < self.defense / 6:
+                self.currentDefense = self.defense / 6
+        if statname == "SpAtk":
+            net_change = math.floor(self.spatk * (stages/6))
+            if net_change > 0:
+                print(self.name + "'s special attack rose!")
+            elif net_change < 0:
+                print(self.name + "'s special attack fell!")
+            self.currentSpAtk += net_change
+            if self.currentSpAtk > self.spatk * 6:
+                self.currentSpAtk = self.spatk * 6
+            elif self.currentSpAtk < self.spatk / 6:
+                self.currentSpAtk = self.spatk / 6
+        if statname == "SpDef":
+            net_change = math.floor(self.spdef * (stages/6))
+            if net_change > 0:
+                print(self.name + "'s special defense rose!")
+            elif net_change < 0:
+                print(self.name + "'s special defense fell!")
+            self.currentSpDef += net_change
+            if self.currentSpDef > self.spdef * 6:
+                self.currentSpDef = self.spdef * 6
+            elif self.currentSpDef < self.spdef / 6:
+                self.currentSpDef = self.spdef / 6
+        if statname == "Speed":
+            net_change = math.floor(self.speed * (stages/6))
+            if net_change > 0:
+                print(self.name + "'s speed rose!")
+            elif net_change < 0:
+                print(self.name + "'s speed fell!")
+            self.currentSpeed += net_change
+            if self.currentSpeed > self.speed * 6:
+                self.currentSpeed = self.speed * 6
+            elif self.currentSpeed < self.speed / 6:
+                self.currentSpeed = self.speed / 6
 
     def incrementInflictedTurns(self):
         self.inflicted_turns += 1

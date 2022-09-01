@@ -143,9 +143,14 @@ class HumanPlayer(Player):
             if index >= 1 and index <= 4:
                 move = self.pokemon.getMoves(index - 1)
                 print(self.pokemon.getName() + " used " + move.getName() + "!")
-                if not move.accuracyRoll(random.randint(0,99)):
-                    print("The attack missed!")
-                    return
+                if move.getAccuracy() != "None":
+                    if not move.accuracyRoll(random.randint(0,99)):
+                        print("The attack missed!")
+                        return
+                    else:
+                        damage = super().damageCalc(move, other_pkmn)
+                        other_pkmn.setCurrentHP(damage)
+                        return
                 else:
                     damage = super().damageCalc(move, other_pkmn)
                     other_pkmn.setCurrentHP(damage)

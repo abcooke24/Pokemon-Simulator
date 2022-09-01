@@ -6,11 +6,14 @@ movelist = pd.read_csv('PokemonSimulator\Gen1_Moves.csv')
 class Move:
     """ Establishes the characteristics of a Pokemon's move
     
-        Attributes:
-            name (str) = this move's name
-            type (Type) = this move's type
-            category (str) = this category of this move
-            power (float) = this move's power"""
+    Attributes:
+        name (str) = this move's name
+        type (Type) = this move's type
+        category (str) = this category of this move
+        power (float) = this move's power
+        accuracy (str or int) = this move's accuracy; is "None" if this
+        move cannot miss, and is an int between 0 and 100 otherwise
+    """
 
     def __init__(self, move_name):
         move = self.moveInfo(move_name)
@@ -18,17 +21,16 @@ class Move:
         self.type = move.values[0][2]
         self.category = move.values[0][3]
         self.power = float(move.values[0][6])
-        self.accuracy = int(self.parseAccuracy(move.values[0][7]))
+        self.accuracy = self.parseAccuracy(move.values[0][7])
 
     def moveInfo(self, move_name):
         move = movelist.loc[movelist['Name'] == move_name]
         return move
 
-    def parseAccuracy(self, accuracy): # THIS IS TEMPORARY
-        if accuracy == "None":
-            return 100
-        else:
-            return accuracy
+    def parseAccuracy(self, accuracy): # acuracy can be either an int or a string
+        if accuracy != "None":
+            accuracy = int(accuracy)
+        return accuracy
 
     def getName(self):
         return self.name

@@ -15,7 +15,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 14,Double-Edge,Normal,Physical,Tough,15,120,100,1
 15,Twineedle,Bug,Physical,Cool,20,25,100,1
 16,Pin Missile,Bug,Physical,Cool,20,25,None,1
-18,Growl,Normal,Status,Cute,40,50,100,1
+18,Growl,Normal,Status,Cute,40,None,100,1
 19,Sing,Normal,Status,Cute,15,None,55,1
 20,Acid,Poison,Special,Clever,30,40,100,1
 21,Flamethrower,Fire,Special,Beautiful,15,90,100,1
@@ -30,12 +30,12 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 29,Drill Peck,Flying,Physical,Cool,20,80,100,1
 30,Submission,Fighting,Physical,Cool,20,80,80,1
 31,Seismic Toss,Fighting,Physical,Tough,20,100,100,1
-32,Strength,Normal,Physical,Tough,15,80,100,1(BAD)
+32,Strength,Normal,Physical,Tough,15,80,100,1(DOESN'T WORK ON PSYDUCK)
 33,Growth,Normal,Status,Beautiful,20,60,None,1
 34,Razor Leaf,Grass,Physical,Cool,25,55,95,1
 35,Solar Beam,Grass,Special,Cool,10,120,100,1
-36,Stun Spore,Grass,Status,Clever,30,65,75,1
-37,Sleep Powder,Grass,Status,Clever,15,90,75,1
+36,Stun Spore,Grass,Status,Clever,30,None,75,1
+37,Sleep Powder,Grass,Status,Clever,15,None,75,1
 38,Petal Dance,Grass,Special,Beautiful,10,70,100,1
 39,Thunderbolt,Electric,Special,Cool,15,90,100,1
 40,Thunder Wave,Electric,Status,Cool,20,None,100,1
@@ -46,8 +46,8 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 45,Confusion,Psychic,Special,Clever,25,50,100,1
 46,Psychic,Psychic,Special,Clever,10,90,100,1
 47,Quick Attack,Normal,Physical,Cool,30,40,100,1
-48,Defense Curl,Normal,Status,Cute,40,20,None,1
-49,Focus Energy,Normal,Status,Cool,30,80,None,1
+48,Defense Curl,Normal,Status,Cute,40,None,None,1
+49,Focus Energy,Normal,Status,Cool,30,None,None,1
 50,Selfdestruct,Normal,Physical,Beautiful,5,200,100,1
 51,Egg Bomb,Normal,Physical,Cute,10,100,75,1
 52,Sludge,Poison,Special,Tough,20,65,100,1
@@ -57,9 +57,8 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
 55,Swift,Normal,Special,Cool,20,60,None,1
 56,Leech Life,Bug,Physical,Clever,10,80,100,1
 56,Dragonbreath,Dragon,Special,Clever,10,80,100,1
-57,Transform,Normal,Status,Clever,10,None,None,1
 58,Dizzy Punch,Normal,Physical,Cute,10,70,100,1
-59,Splash,Normal,Status,Cute,40,1,None,1
+59,Splash,Normal,Status,Cute,40,None,None,1
 60,Crabhammer,Water,Physical,Tough,10,100,None,1
 61,Bonemerang,Ground,Physical,Tough,10,120,90,1
 62,Rock Slide,Rock,Physical,Tough,10,75,90,1

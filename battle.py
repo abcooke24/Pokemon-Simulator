@@ -11,7 +11,9 @@ from Constants import Statuses
 
     TO IMPLEMENT:
         - Status conditions (!)
-        - More robust moves
+            - Status move implementation (!)
+            - Proper status checks (done)
+            - Stat boosts/drops (done)
         - More Pokemon
         - 3v3 format
         - Smarter AI (!)
