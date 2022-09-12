@@ -10,10 +10,7 @@ from Constants import Statuses
 """ This is a Pokemon battle simulator; it is unfinished.
 
     TO IMPLEMENT:
-        - Status conditions (!)
-            - Status move implementation (!)
-            - Proper status checks (done)
-            - Stat boosts/drops (done)
+        - Status Conditions (a few bugs)
         - More Pokemon
         - 2v2 format
         - Smarter AI (!)

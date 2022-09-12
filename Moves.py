@@ -10,7 +10,8 @@ class Move:
         name (str) = this move's name
         type (Type) = this move's type
         category (str) = this category of this move
-        power (float) = this move's power
+        power (float) = this move's power; is "None" if this move uses no
+        damage calculation, and is an int between 0 and 100 otherwise
         accuracy (str or int) = this move's accuracy; is "None" if this
         move cannot miss, and is an int between 0 and 100 otherwise
     """
@@ -20,14 +21,19 @@ class Move:
         self.name = move_name
         self.type = move.values[0][2]
         self.category = move.values[0][3]
-        self.power = float(move.values[0][6])
+        self.power = self.parsePower(move.values[0][6])
         self.accuracy = self.parseAccuracy(move.values[0][7])
 
     def moveInfo(self, move_name):
         move = movelist.loc[movelist['Name'] == move_name]
         return move
 
-    def parseAccuracy(self, accuracy): # acuracy can be either an int or a string
+    def parsePower(self, power): # power can be an int or a string
+            if power != "None":
+                power = int(power)
+            return power
+            
+    def parseAccuracy(self, accuracy): # accuracy can be an int or a string
         if accuracy != "None":
             accuracy = int(accuracy)
         return accuracy
@@ -57,10 +63,10 @@ class Move:
             - TRUE if the attack will hit
             - FALSE otherwise
         """
+        if self.accuracy == "None" or self.accuracy > randNo:
+            return True
         if self.accuracy <= randNo:
             return False
-        else:
-            return True
 
     def effect_multiplier(self, type1, type2):
         """ Determines if this move is super effective, not very effective,

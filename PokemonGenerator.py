@@ -2,7 +2,7 @@ import pandas as pd, random, math
 from Moves import Move
 from Constants import Stats, Natures, Statuses
 
-pokedex = pd.read_csv('PokemonSimulator\Kanto_Pokemon_100.csv')
+pokedex = pd.read_csv("PokemonSimulator\Kanto_Pokemon_100.csv")
 
 class Pokemon:
     """ Generates a random Pokemon out of 100 possible choices,
@@ -31,6 +31,8 @@ class Pokemon:
         currentSpAtk (int) = this Pokemon's special attack stat after boosts/drops
         currentSpDef (int) = this Pokemon's special defense stat after boosts/drops
         currentSpeed (int) = this Pokemon's speed stat after boosts/drops
+        critBoost (boolean) = whether or not this Pokemon's critical hit ratio
+        has been boosted
         moves (list of moves) = the moves this Pokemon has
     """
 
@@ -46,6 +48,7 @@ class Pokemon:
         """
         info = self.pokeInfo(dexno)
         self.name = info.values[1]
+        print(self.name)
         self.types = ([info.values[2],info.values[3]])
         self.status = Statuses.HEALTHY
         self.inflicted_turns = 0
@@ -68,6 +71,7 @@ class Pokemon:
         self.currentSpAtk = self.spatk * 1
         self.currentSpDef = self.spdef * 1
         self.currentSpeed = self.speed * 1
+        self.critBoost = False
 
         # A different function will construct each move
         self.moves = self.setMoves((
@@ -189,24 +193,27 @@ class Pokemon:
             this Pokemon's two types will be returned
         """
         return self.types.copy()[index]
+    
+    def getBothTypes(self):
+        return self.types.copy()
 
     def getMaxHP(self):
         return self.maxHP
 
     def getAttack(self):
-        return self.attack
+        return self.currentAttack
 
     def getDefense(self):
-        return self.defense
+        return self.currentDefense
 
     def getSpAtk(self):
-        return self.spatk
+        return self.currentSpAtk
 
     def getSpdef(self):
-        return self.spdef
+        return self.currentSpDef
 
     def getSpeed(self):
-        return self.speed
+        return self.currentSpeed
 
     def getMoves(self, index):
         """ Returns one of this Pokemon's four moves.
@@ -223,9 +230,31 @@ class Pokemon:
     def getStatus(self):
         return self.status
 
-    def setStatus(self, newStatus):
-        """ THIS NEEDS TO BE UPDATED"""
-        self.status = newStatus
+    def setStatus(self, newStatus): 
+        """ Sets this Pokemon's status to a different specified status.
+
+        Parameters:
+            newStatus (str): Three letter string representing the status this
+            Pokemon will have. WILL NOT BE THE SAME AS THE CURRENT STATUS.
+
+        Side Effects:
+            - Changes this Pokemon's status
+        """
+        # stats can be slightly changed through multiple status changes; will fix later
+        if newStatus == Statuses.BRN:
+            atk_drop = self.currentAttack / 2
+            self.currentAttack = math.ceil(atk_drop)
+        elif newStatus == Statuses.PRZ:
+            speed_drop = math.ceil(self.currentSpeed / 4)
+            self.currentSpeed = speed_drop
+        elif newStatus == Statuses.HEALTHY:
+            if self.status == Statuses.BRN:
+                atk_restored = math.floor(self.currentAttack * 2)
+                self.currentAttack = atk_restored
+            if self.status == Statuses.PRZ:
+                speed_restored = math.floor(self.currentAttack * 2)
+                self.currentSpeed = speed_restored
+        self.status = newStatus 
 
     def getInflictedTurns(self):
         return self.inflicted_turns
@@ -256,10 +285,11 @@ class Pokemon:
             Alters a current stat accordingly
         """
         if statname == "Attack":
-            net_change = math.floor(self.attack * (stages/6))
-            if net_change > 0:
+            if stages > 0:
+                net_change = math.floor(self.attack * (stages/2))
                 print(self.name + "'s attack rose!")
-            elif net_change < 0:
+            elif stages < 0:
+                net_change = math.floor(self.attack / (((stages * -1) + 2)/2))
                 print(self.name + "'s attack fell!")
             self.currentAttack += net_change
             if self.currentAttack > self.attack * 6:
@@ -312,7 +342,20 @@ class Pokemon:
                 self.currentSpeed = self.speed / 6
 
     def incrementInflictedTurns(self):
+        """Increments the # of turns this Pokemon has has a non-healthy status
+        condition. This is relevant for sleeping, badly poisoned, and freezing
+        Pokemon."""
         self.inflicted_turns += 1
 
-    def resetInflictedTurns(self):
+    def resetInflictedTurns(self): # may combine with setStatus
+        "Changes the number of inflicted turns to 0"
         self.inflicted_turns = 0
+
+    def hasCritBoost(self):
+        if self.critBoost:
+            return True
+        else:
+            return False
+    
+    def setCritBoost(self):
+        self.critBoost = True

@@ -2,7 +2,7 @@
 
 import random, math
 from PokemonGenerator import Pokemon
-from Constants import Statuses
+from Constants import Statuses, Type
 
 class Player:
     """ Base class for the Player
@@ -44,22 +44,23 @@ class Player:
         the Generation I calculator are present. Each Pokemon's level is
         assumed to be 100.
 
-        Attributes:
+        Parameters:
             selected (Move): the selected move
             defender (Pokemon): the opposing Pokemon
         """
         # Attack / Defense (depicted as "A/D" on bulbapedia)
         if selected.getCategory() == "Physical":
             ad_ratio = self.pokemon.getAttack() / defender.getDefense()
-        elif selected.getCategory() == "Special":
+        else: # selected.getCategory() == "Special"
             ad_ratio = self.pokemon.getSpAtk() / defender.getSpdef()
-        else:
-            print("status")
-            return 0
             # Status moves have yet to be implemented, so no damage is returned
         damage = ((42 * selected.getPower() * ad_ratio) / 50) + 2
         # Checks for a critical hit
-        if self.criticalHit(random.randint(0,15)):
+        if self.getPokemon().hasCritBoost():
+            crit_check = random.randint(0,3)
+        else: # not crit-boosted
+            crit_check = random.randint(0,15)
+        if self.criticalHit(crit_check):
             damage *= 2
             print("A critical hit!")
         # Checks for same type attack bonus (STAB)
@@ -71,7 +72,74 @@ class Player:
             defender.getTypes(0), defender.getTypes(1))
         damage *= (random.randint(85,100) / 100)
         damage = math.floor(damage)
+        print(damage)
         return damage
+
+    def executeStatus(self, selected, defender):
+        """ Uses the specified status move.
+        
+        Parameters:
+            selected (Move): the selected move
+            defender (Pokemon): the opposing Pokemon
+
+        Side Effects:
+            prints a message based on the move's effect
+        """
+        user = self.getPokemon()
+        move = selected.getName()
+        if move in Statuses.STATUS_INFLICT:
+            if defender.getStatus() != Statuses.HEALTHY:
+                print("But it failed!") # should swap spots with next piece of code
+                return
+            else: # defending Pokemon's current status is Healthy
+                if ((move == "Thunder Wave" and Type.GROUND in
+                defender.getBothTypes()) or (selected.getType == Type.POISON 
+                and Type.POISON in defender.getBothTypes)):
+                    # Thunder Wave doesn't hit ground types
+                    # poison types cannot get poisoned.
+                    print ("It had no effect!")
+                    return
+                else: # the move does affect the defending Pokemon
+                    name = defender.getName()
+                    if move in Statuses.SLP_INFLICT:
+                        defender.setStatus(Statuses.SLP)
+                        print(name + " fell asleep")
+                        return
+                    elif move in Statuses.PRZ_INFLICT:
+                        defender.setStatus(Statuses.PRZ)
+                        print(name + " is paralyzed.")
+                        print("It may be unable to move!")
+                        return 
+                    elif move in Statuses.BRN_INFLICT:
+                        defender.setStatus(Statuses.BRN)
+                        print(name + " was burned!")
+                        return
+                    elif move in Statuses.PSN_INFLICT:
+                        defender.setStatus(Statuses.PSN)
+                        print(name + " was poisoned!")
+                        return
+                    else: # move == "Toxic" (not implemented yet)
+                        defender.setStatus(Statuses.TOX)
+                        print(name + " was badly poisoned!")
+                        return
+        elif move in Statuses.STAT_BOOST or move in Statuses.STAT_DROP:
+            # there will be more
+            if move in Statuses.ATK_BOOST:
+                user.setCurrentStat("Attack", 1)
+            elif move in Statuses.ATK_DROP:
+                defender.setCurrentStat("Attack", -1)
+            if move in Statuses.DEF_BOOST:
+                user.setCurrentStat("Defense", 1)
+            if move in Statuses.SPATK_BOOST:
+                user.setCurrentStat("Special Attack", 1)
+            return
+        else: # move in Statuses.CRIT_BOOST (assumed to be "Focus Energy" for now)
+            if user.hasCritBoost():
+                print("But it failed!")
+            else: # user is not yet crit-boosted
+                print(user.getName() + " is getting pumped!")
+                user.setCritBoost()
+            return
     
     def take_turn(self):
         """ Selects a move and calculates the damage.
@@ -100,12 +168,17 @@ class ComputerPlayer(Player):
         move = self.pokemon.getMoves(index)
 
         print(self.pokemon.getName() + " used " + move.getName() + "!")
-        if not move.accuracyRoll(random.randint(0,99)):
-            print("The attack missed!")
-            return
-        else:
+        if move.getAccuracy() != "None":
+            if not move.accuracyRoll(random.randint(0,99)):
+                print("The attack missed!")
+                return
+        if (move.getCategory() == "Physical" 
+        or move.getCategory() == "Special"):
             damage = super().damageCalc(move, other_pkmn)
             other_pkmn.setCurrentHP(damage)
+            return
+        else: # Move type is "Status"
+            super().executeStatus(move, other_pkmn)
             return
 
     def __str__(self):
@@ -147,13 +220,13 @@ class HumanPlayer(Player):
                     if not move.accuracyRoll(random.randint(0,99)):
                         print("The attack missed!")
                         return
-                    else:
-                        damage = super().damageCalc(move, other_pkmn)
-                        other_pkmn.setCurrentHP(damage)
-                        return
-                else:
+                if (move.getCategory() == "Physical" 
+                or move.getCategory() == "Special"):
                     damage = super().damageCalc(move, other_pkmn)
                     other_pkmn.setCurrentHP(damage)
+                    return
+                else: # Move type is "Status"
+                    super().executeStatus(move, other_pkmn)
                     return
             else:
                 print("Please enter a number between 1 and 4")

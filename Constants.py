@@ -86,7 +86,8 @@ class Stats:
     stat_list = ["HP", "Attack", "Defense", "SpAtk", "SpDef", "Speed"] 
 
 class Statuses:
-    "Establishes each possible status condition as a constant."
+    """Establishes each possible status condition as a constant and categorizes
+    each status move accordingly."""
     HEALTHY = "Healthy"
     PRZ = "Paralysis"
     PSN = "Poisoned"
@@ -95,11 +96,24 @@ class Statuses:
     SLP = "Sleep"
     FRZ = "Freeze"
 
+    
     IMMOBILIZERS = [PRZ, SLP, FRZ]
     CHIP_DAMAGE = [PSN, BRN, TOX]
 
-    SLP_INFLICT = ["Sing"]
-    PRZ_INFLICT = ["Thunder Wave"]
+    SLP_INFLICT = ["Sing", "Sleep Powder"]
+    PRZ_INFLICT = ["Thunder Wave", "Stun Spore"]
+
+    ATK_DROP = ["Growl"]
+    ATK_BOOST = ["Growth"]
+    DEF_BOOST = ["Defense Curl"]
+    SPATK_BOOST = ["Growth"]
+
+    CRIT_BOOST = ["Focus Energy"]
+
+    STATUS_INFLICT = SLP_INFLICT + PRZ_INFLICT
+    STAT_BOOST = ATK_BOOST + DEF_BOOST + SPATK_BOOST
+    STAT_DROP = ATK_DROP
+
 
 class Natures:
     """List of all 25 natures in the game. Each "+" signifies a 10% increase
@@ -145,9 +159,6 @@ class Natures:
     nature_list = [HARDY, LONELY, ADAMANT, NAUGHTY, BRAVE, BOLD, DOCILE,
     IMPISH, LAX, RELAXED, MODEST, MILD, BASHFUL, RASH, QUIET, CALM, GENTLE,
     CAREFUL, QUIRKY, SASSY, TIMID, HASTY, JOLLY, NAIVE, SERIOUS]
-
-class MiscEffects:
-    pass
 
 class SecondaryEffects:
     pass
