@@ -96,6 +96,7 @@ class Statuses:
     SLP = "Sleep"
     FRZ = "Freeze"
 
+    # The following will soon be replace by commands that read an updated csv
     
     IMMOBILIZERS = [PRZ, SLP, FRZ]
     CHIP_DAMAGE = [PSN, BRN, TOX]
