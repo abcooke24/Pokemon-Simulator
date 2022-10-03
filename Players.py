@@ -2,7 +2,7 @@
 
 import random, math
 from PokemonGenerator import Pokemon
-from Constants import Statuses, Type
+from Constants import Statuses, Type, SecondaryEffects
 
 class Player:
     """ Base class for the Player
@@ -32,6 +32,28 @@ class Player:
             return True
         else:
             return False
+    
+    def flinch(self, flinch_move):
+        """ Determines whether or not the defending pokemon will flinch assuming
+        a move with a chance to flinch is used AND the defender is slower than
+        the attacker.
+        
+        Moves have either a 10, 20, or 30 percent chance to cause flinching."""
+        flinch_roll = random.randint(1, 10)
+        move_name = flinch_move.getName()
+        if move_name in SecondaryEffects.FLINCH_10:
+            if flinch_roll == 1:
+                print(self.pokemon.getName() + " flinched!")
+                return True
+        elif move_name in SecondaryEffects.FLINCH_20:
+            if flinch_roll == 1 or flinch_roll == 2:
+                print(self.pokemon.getName() + " flinched!")
+                return True
+        elif move_name in SecondaryEffects.FLINCH_30:
+            if flinch_roll >= 1 and flinch_roll <= 3:
+                print(self.pokemon.getName() + " flinched!")
+                return True
+        return False
 
     def damageCalc(self, selected, defender):
         """ Calculates damage based on the official formula as displayed on
@@ -56,7 +78,7 @@ class Player:
             # Status moves have yet to be implemented, so no damage is returned
         damage = ((42 * selected.getPower() * ad_ratio) / 50) + 2
         # Checks for a critical hit
-        if self.getPokemon().hasCritBoost():
+        if self.pokemon.hasCritBoost():
             crit_check = random.randint(0,3)
         else: # not crit-boosted
             crit_check = random.randint(0,15)
@@ -73,6 +95,10 @@ class Player:
         damage *= (random.randint(85,100) / 100)
         damage = math.floor(damage)
         print(damage)
+        if self.pokemon.getSpeed() >= defender.getSpeed():
+            flinched = self.flinch(selected)
+            if flinched:
+                defender.setFlinch(True)
         return damage
 
     def executeStatus(self, selected, defender):

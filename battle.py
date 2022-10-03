@@ -2,6 +2,7 @@ import sys, random, math
 from argparse import ArgumentParser
 from Players import HumanPlayer, ComputerPlayer
 from Constants import Statuses
+from Moves import Move
 
 # THIS IS WHERE MAIN IS LOCATED. EXAMPLE TEST SCRIPTS ARE BELOW
 # python PokemonSimulator/battle.py computer Player
@@ -10,11 +11,12 @@ from Constants import Statuses
 """ This is a Pokemon battle simulator; it is unfinished.
 
     TO IMPLEMENT:
-        - Status Conditions (a few bugs)
         - More Pokemon
+        - More moves (!)
+        - Secondary move effects (!)
         - 2v2 format
         - Smarter AI (!)
-        - Misc improvements/implementations
+        - Different battle mode (!)
         
     CONSIDER THE FOLLOWING:
         - Held items
@@ -107,9 +109,32 @@ class Battle:
             else:
                 print(name + " is frozen solid!")
                 return False
+        elif status == Statuses.CON:
+            confused_turns = pokemon.getInflictedTurns()
+            print(name + " is confused!")
+            if confused_turns >= 2:
+                snap_roll = random.randint(confused_turns, 6)
+                if snap_roll == confused_turns:
+                    print(name + " snapped out of confusion!")
+                    pokemon.setStatus(Statuses.HEALTHY)
+                    pokemon.resetInflictedTurns()
+                    return True
+            else:
+                confusion_roll = random.randint(0,1)
+                if confusion_roll == 0:
+                    # hits self
+                    ad_ratio = pokemon.getAttack() / pokemon.getDefense()
+                    damage = ((42 * 40 * ad_ratio) / 50) + 2
+                    pokemon.setCurrentHP(damage)
+                    print(name + " hit itself in confusion!")
+                    pokemon.incrementInflictedTurns()
+                    return False
+                else: # confusion_roll == 1
+                    pokemon.incrementInflictedTurns()
+                    return True
         else: # status == (TOX, PSN, OR BRN)
             return True
-    
+
     def chip_damage(self, status, pokemon):
         if status == Statuses.BRN or status == Statuses.PSN:
             damage = math.floor(pokemon.getMaxHP() * 0.125)
@@ -119,7 +144,7 @@ class Battle:
             mutliplier = pokemon.getInflictedTurns() + 1
             tox_multiplier = math.floor(0.0625 * mutliplier)
             damage = pokemon.getMaxHP() * tox_multiplier
-            pokemon.setCurrentHP(tox_multiplier)
+            pokemon.setCurrentHP(damage)
             pokemon.incrementInflictedTurns()
 
     def start(self):
@@ -130,10 +155,7 @@ class Battle:
         """
         p1_pkmn = self.player1.getPokemon()
         p2_pkmn = self.player2.getPokemon()
-        p1_speed = p1_pkmn.getSpeed()
-        p2_speed = p2_pkmn.getSpeed()
         battle_over = False
-
         print("{} has {}. {} has {}.".format(
             self.player1.getName(),
             p1_pkmn.getName(),
@@ -141,6 +163,8 @@ class Battle:
             p2_pkmn.getName()
         ))
         while True:
+            p1_speed = p1_pkmn.getSpeed()
+            p2_speed = p2_pkmn.getSpeed()
             print()
             if p1_speed >= p2_speed:
                 # p1 turn
@@ -159,8 +183,8 @@ class Battle:
                     self.player2.take_turn(p1_pkmn)
                     p1_HP = p1_pkmn.getCurrentHP()
                     battle_over = self.is_game_over(p1_HP)
-                    if battle_over:
-                        break
+                if battle_over:
+                    break
             else:
                 # p2 turn
                 if self.is_mobile(p2_pkmn):
@@ -169,8 +193,8 @@ class Battle:
                     self.player2.take_turn(p1_pkmn)
                     p1_HP = p1_pkmn.getCurrentHP()
                     battle_over = self.is_game_over(p1_HP)
-                    if battle_over:
-                        break
+                if battle_over:
+                    break
                 # p1 turn
                 if self.is_mobile(p1_pkmn):
                     print(self.player1)
@@ -178,19 +202,19 @@ class Battle:
                     self.player1.take_turn(p2_pkmn)
                     p2_HP = p2_pkmn.getCurrentHP()
                     battle_over = self.is_game_over(p2_HP)
-                    if battle_over:
-                        break
+                if battle_over:
+                    break
                 # psn, tox, or burn check (and decrement)
                 if p1_pkmn.getStatus() in Statuses.CHIP_DAMAGE:
                     self.chip_damage(p1_pkmn.getStatus(), p1_pkmn)
                     battle_over = self.is_game_over(p1_HP)
-                    if battle_over:
-                        break
+                if battle_over:
+                    break
                 if p2_pkmn.getStatus() in Statuses.CHIP_DAMAGE:
                     self.chip_damage(p2_pkmn.getStatus(), p2_pkmn)
                     battle_over = self.is_game_over(p2_HP)
-                    if battle_over:
-                        break
+                if battle_over:
+                    break
         print()
         if p1_pkmn.getCurrentHP() == 0:
             print(p1_pkmn.getName() + " fainted.")

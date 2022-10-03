@@ -1,7 +1,4 @@
-import pandas as pd
-from Constants import Type
-
-movelist = pd.read_csv('PokemonSimulator\Gen1_Moves.csv')
+from Constants import Data, Type
 
 class Move:
     """ Establishes the characteristics of a Pokemon's move
@@ -25,15 +22,18 @@ class Move:
         self.accuracy = self.parseAccuracy(move.values[0][7])
 
     def moveInfo(self, move_name):
-        move = movelist.loc[movelist['Name'] == move_name]
+        move = Data.movelist.loc[Data.movelist['Name'] == move_name]
+        print(move)
         return move
 
-    def parsePower(self, power): # power can be an int or a string
-            if power != "None":
-                power = int(power)
-            return power
+    def parsePower(self, power): 
+        # power can be an int or a string
+        if power != "None":
+            power = int(power)
+        return power
             
-    def parseAccuracy(self, accuracy): # accuracy can be an int or a string
+    def parseAccuracy(self, accuracy): 
+        # accuracy can be an int or a string
         if accuracy != "None":
             accuracy = int(accuracy)
         return accuracy

@@ -1,8 +1,6 @@
 import pandas as pd, random, math
 from Moves import Move
-from Constants import Stats, Natures, Statuses
-
-pokedex = pd.read_csv("PokemonSimulator\Kanto_Pokemon_100.csv")
+from Constants import Stats, Natures, Statuses, Data
 
 class Pokemon:
     """ Generates a random Pokemon out of 100 possible choices,
@@ -72,6 +70,7 @@ class Pokemon:
         self.currentSpDef = self.spdef * 1
         self.currentSpeed = self.speed * 1
         self.critBoost = False
+        self.flinchedThisTurn = False
 
         # A different function will construct each move
         self.moves = self.setMoves((
@@ -87,7 +86,7 @@ class Pokemon:
         Returns:
             Dataframe representing a column from the Kanto_Pokemon_100 csv file
         """
-        col = pokedex.loc[dexno + 1]
+        col = Data.pokedex.loc[dexno + 1]
         return col
     
     def setEVs(self):
@@ -359,3 +358,12 @@ class Pokemon:
     
     def setCritBoost(self):
         self.critBoost = True
+    
+    def flinchedThisTurn(self):
+        return self.flinchedThisTurn
+
+    def setFlinch(self, flinched):
+        if flinched:
+            self.flinchedThisTurn = True
+        else:
+            self.flinchedThisTurn = False
