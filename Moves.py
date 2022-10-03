@@ -10,7 +10,7 @@ class Move:
         power (float) = this move's power; is "None" if this move uses no
         damage calculation, and is an int between 0 and 100 otherwise
         accuracy (str or int) = this move's accuracy; is "None" if this
-        move cannot miss, and is an int between 0 and 100 otherwise
+        move cannot miss; is an int between 0 and 100 otherwise
     """
 
     def __init__(self, move_name):

@@ -31,7 +31,10 @@ class Pokemon:
         currentSpeed (int) = this Pokemon's speed stat after boosts/drops
         critBoost (boolean) = whether or not this Pokemon's critical hit ratio
         has been boosted
-        moves (list of moves) = the moves this Pokemon has
+        flinchedThisTurn (boolean) = whether or not this Pokemon has flinched on
+        this particular turn
+        moves (list of moves) = the moves this Pokemon has; usually contains
+        four entries
     """
 
     def __init__(self, dexno):
@@ -51,7 +54,7 @@ class Pokemon:
         self.status = Statuses.HEALTHY
         self.inflicted_turns = 0
 
-        # Sets stats with the setStats; not subject to change
+        # Sets stats with the setStats; not subject to change; not gettable
         self.EVs = self.setEVs()
         self.IVs = self.setIVs()
         self.nature = Natures.nature_list.copy()[random.randint(0,24)]
@@ -62,7 +65,7 @@ class Pokemon:
         self.spdef = self.setStats(int(info.values[8]), "SpDef")
         self.speed = self.setStats(int(info.values[9]), "Speed")
 
-        # This Pokemon's CURRENT stats; subject to change during battle
+        # This Pokemon's CURRENT stats; subject to change during battle; gettable
         self.currentHP = self.maxHP * 1
         self.currentAttack = self.attack * 1
         self.currentDefense = self.defense * 1
@@ -243,26 +246,45 @@ class Pokemon:
         if newStatus == Statuses.BRN:
             atk_drop = self.currentAttack / 2
             self.currentAttack = math.ceil(atk_drop)
+            print(self.name + " was burned!")
         elif newStatus == Statuses.PRZ:
             speed_drop = math.ceil(self.currentSpeed / 4)
             self.currentSpeed = speed_drop
+            print(self.name + " was paralyzed! It might not be able to move!")
+        elif newStatus == Statuses.PSN:
+            print(self.name + " was poisoned!")
+        elif newStatus == Statuses.TOX:
+            print(self.name + " was badly poisoned!")
+        elif newStatus == Statuses.FRZ:
+            print(self.name + " was frozen!")
         elif newStatus == Statuses.HEALTHY:
+            # as it stands currently, this will never happen; no print statements
             if self.status == Statuses.BRN:
                 atk_restored = math.floor(self.currentAttack * 2)
                 self.currentAttack = atk_restored
             if self.status == Statuses.PRZ:
-                speed_restored = math.floor(self.currentAttack * 2)
+                speed_restored = math.floor(self.currentSpeed * 4)
                 self.currentSpeed = speed_restored
         self.status = newStatus 
 
     def getInflictedTurns(self):
         return self.inflicted_turns
     
+    def incrementInflictedTurns(self):
+        """Increments the # of turns this Pokemon has has a non-healthy status
+        condition. This is relevant for sleeping, badly poisoned, and freezing
+        Pokemon."""
+        self.inflicted_turns += 1
+
+    def resetInflictedTurns(self): # may combine with setStatus
+        "Changes the number of inflicted turns to 0"
+        self.inflicted_turns = 0
+    
     def setCurrentHP(self, damage):
         """ Inflicts calculated damage to this Pokemon
         
         Args:
-            damage (float): the amount of damage done to this Pokemon
+            damage (int): the amount of damage done to this Pokemon
         
         Side effects:
             Decrements currentHP accordingly
@@ -295,7 +317,7 @@ class Pokemon:
                 self.currentAttack = self.attack * 6
             elif self.currentAttack < self.attack / 6:
                 self.currentAttack = self.attack / 6
-        if statname == "Defense":
+        elif statname == "Defense":
             net_change = math.floor(self.defense * (stages/6))
             if net_change > 0:
                 print(self.name + "'s defense rose!")
@@ -306,7 +328,7 @@ class Pokemon:
                 self.currentDefense = self.defense * 6
             elif self.currentDefense < self.defense / 6:
                 self.currentDefense = self.defense / 6
-        if statname == "SpAtk":
+        elif statname == "SpAtk":
             net_change = math.floor(self.spatk * (stages/6))
             if net_change > 0:
                 print(self.name + "'s special attack rose!")
@@ -317,7 +339,7 @@ class Pokemon:
                 self.currentSpAtk = self.spatk * 6
             elif self.currentSpAtk < self.spatk / 6:
                 self.currentSpAtk = self.spatk / 6
-        if statname == "SpDef":
+        elif statname == "SpDef":
             net_change = math.floor(self.spdef * (stages/6))
             if net_change > 0:
                 print(self.name + "'s special defense rose!")
@@ -328,7 +350,7 @@ class Pokemon:
                 self.currentSpDef = self.spdef * 6
             elif self.currentSpDef < self.spdef / 6:
                 self.currentSpDef = self.spdef / 6
-        if statname == "Speed":
+        elif statname == "Speed":
             net_change = math.floor(self.speed * (stages/6))
             if net_change > 0:
                 print(self.name + "'s speed rose!")
@@ -339,16 +361,6 @@ class Pokemon:
                 self.currentSpeed = self.speed * 6
             elif self.currentSpeed < self.speed / 6:
                 self.currentSpeed = self.speed / 6
-
-    def incrementInflictedTurns(self):
-        """Increments the # of turns this Pokemon has has a non-healthy status
-        condition. This is relevant for sleeping, badly poisoned, and freezing
-        Pokemon."""
-        self.inflicted_turns += 1
-
-    def resetInflictedTurns(self): # may combine with setStatus
-        "Changes the number of inflicted turns to 0"
-        self.inflicted_turns = 0
 
     def hasCritBoost(self):
         if self.critBoost:

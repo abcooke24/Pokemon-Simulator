@@ -1,4 +1,4 @@
-""" Human and computer tic tac toe players. """
+""" Human and computer Pokemon players """
 
 import random, math
 from PokemonGenerator import Pokemon
@@ -9,6 +9,7 @@ class Player:
     
     Attributes:
         name (str): the player's name
+        pokemon (Pokemon): the player's Pokemon
     """
     def __init__(self, name):
         self.name = name
@@ -38,22 +39,53 @@ class Player:
         a move with a chance to flinch is used AND the defender is slower than
         the attacker.
         
-        Moves have either a 10, 20, or 30 percent chance to cause flinching."""
+        Moves have either a 10, 20, or 30 percent chance to cause flinching.
+        """
         flinch_roll = random.randint(1, 10)
         move_name = flinch_move.getName()
         if move_name in SecondaryEffects.FLINCH_10:
             if flinch_roll == 1:
-                print(self.pokemon.getName() + " flinched!")
                 return True
         elif move_name in SecondaryEffects.FLINCH_20:
             if flinch_roll == 1 or flinch_roll == 2:
-                print(self.pokemon.getName() + " flinched!")
                 return True
         elif move_name in SecondaryEffects.FLINCH_30:
             if flinch_roll >= 1 and flinch_roll <= 3:
-                print(self.pokemon.getName() + " flinched!")
                 return True
         return False
+    
+    def statusChanceHandler(status_move, defender):
+        """ Determines whether or not the defending pokemon will be inflicted
+        with a certain status condition. Chances range from 10-40%. 
+        
+        Confusion is the only status condition that can stack on top of another
+        """
+        status_roll = random.randint(1, 10)
+        name = status_move.getName()
+        # I need to optimize this, it hurts to look at
+        if (name in SecondaryEffects.BRN_10 and status_roll == 1
+        and defender.getStatus() == Statuses.HEALTHY):
+            defender.setStatus(Statuses.BRN)
+        elif (name in SecondaryEffects.FRZ_10 and status_roll == 1
+        and defender.getStatus() == Statuses.HEALTHY):
+            defender.setStatus(Statuses.FRZ)
+        elif (name in SecondaryEffects.PRZ_10 and status_roll == 1
+        and defender.getStatus() == Statuses.HEALTHY):
+            defender.setStatus(Statuses.PRZ)
+        elif (name in SecondaryEffects.CON_10 and status_roll == 1):
+            defender.setStatus(Statuses.CON)
+        elif (name in SecondaryEffects.CON_10 and (status_roll == 1
+        or status_roll == 2)):
+            defender.setStatus(Statuses.CON)
+        elif (name in SecondaryEffects.PRZ_30 and status_roll >= 1
+        and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY):
+            defender.setStatus(Statuses.PRZ)
+        elif (name in SecondaryEffects.PSN_30 and status_roll >= 1
+        and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY):
+            defender.setStatus(Statuses.PSN)
+        elif (name in SecondaryEffects.PSN_40 and status_roll >= 1
+        and status_roll <= 4 and defender.getStatus() == Statuses.HEALTHY):
+            defender.setStatus(Statuses.PSN)
 
     def damageCalc(self, selected, defender):
         """ Calculates damage based on the official formula as displayed on
@@ -95,10 +127,13 @@ class Player:
         damage *= (random.randint(85,100) / 100)
         damage = math.floor(damage)
         print(damage)
-        if self.pokemon.getSpeed() >= defender.getSpeed():
-            flinched = self.flinch(selected)
+        if (self.pokemon.getSpeed() >= defender.getSpeed() and 
+        selected in SecondaryEffects.FLINCH_CHANCE):
+            flinched = self.flinch(selected, defender)
             if flinched:
                 defender.setFlinch(True)
+        if selected in SecondaryEffects.STATUS_INFLICT_CHANCE:
+            self.statusChanceHandler(selected, defender)
         return damage
 
     def executeStatus(self, selected, defender):

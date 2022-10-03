@@ -2,7 +2,6 @@ import sys, random, math
 from argparse import ArgumentParser
 from Players import HumanPlayer, ComputerPlayer
 from Constants import Statuses
-from Moves import Move
 
 # THIS IS WHERE MAIN IS LOCATED. EXAMPLE TEST SCRIPTS ARE BELOW
 # python PokemonSimulator/battle.py computer Player
@@ -12,7 +11,6 @@ from Moves import Move
 
     TO IMPLEMENT:
         - More Pokemon
-        - More moves (!)
         - Secondary move effects (!)
         - 2v2 format
         - Smarter AI (!)
@@ -104,7 +102,6 @@ class Battle:
             if FRZ_roll == 0:
                 print(name + " thawed out!")
                 pokemon.setStatus(Statuses.HEALTHY)
-                pokemon.resetInflictedTurns()
                 return True
             else:
                 print(name + " is frozen solid!")
@@ -120,6 +117,7 @@ class Battle:
                     pokemon.resetInflictedTurns()
                     return True
             else:
+                print(name + " is confused!")
                 confusion_roll = random.randint(0,1)
                 if confusion_roll == 0:
                     # hits self
@@ -136,6 +134,7 @@ class Battle:
             return True
 
     def chip_damage(self, status, pokemon):
+        name = pokemon.getName()
         if status == Statuses.BRN or status == Statuses.PSN:
             damage = math.floor(pokemon.getMaxHP() * 0.125)
             pokemon.setCurrentHP(damage)
@@ -146,6 +145,23 @@ class Battle:
             damage = pokemon.getMaxHP() * tox_multiplier
             pokemon.setCurrentHP(damage)
             pokemon.incrementInflictedTurns()
+        if status == Statuses.BRN:
+            print(name + " is hurt by its burn!")
+        else: # status == TOX or PSN
+            print(name + " is hurt by poison!")
+        
+    def criticalHit(self, randNo):
+        """ Determines whether or not a critical hit will occur. Called at the
+        end of damage calculation (damageCalc function). The chances of this
+        happening are normally 1/16, but can increase up to 1/4.
+        
+        Parameters:
+            randNo: Randomly generated number between 0 and 15
+        """
+        if randNo == 0:
+            return True
+        else:
+            return False
 
     def start(self):
         """ This is the function that handles the battle.
@@ -167,7 +183,7 @@ class Battle:
             p2_speed = p2_pkmn.getSpeed()
             print()
             if p1_speed >= p2_speed:
-                # p1 turn
+                # p1 turn (faster)
                 if self.is_mobile(p1_pkmn):
                     print(self.player1)
                     print()
@@ -176,17 +192,21 @@ class Battle:
                     battle_over = self.is_game_over(p2_HP)
                     if battle_over:
                         break
-                # p2 turn
+                # p2 turn (slower)
                 if self.is_mobile(p2_pkmn):
-                    print(self.player2)
-                    print()
-                    self.player2.take_turn(p1_pkmn)
-                    p1_HP = p1_pkmn.getCurrentHP()
-                    battle_over = self.is_game_over(p1_HP)
+                    if p2_pkmn.flinchedThisTurn():
+                        print(p2_pkmn.getName() + " flinched!")
+                        p2_pkmn.setFlinch(False)
+                    else: # p2_pkmn did not flinch
+                        print(self.player2)
+                        print()
+                        self.player2.take_turn(p1_pkmn)
+                        p1_HP = p1_pkmn.getCurrentHP()
+                        battle_over = self.is_game_over(p1_HP)
                 if battle_over:
                     break
             else:
-                # p2 turn
+                # p2 turn (faster)
                 if self.is_mobile(p2_pkmn):
                     print(self.player2)
                     print()
@@ -195,13 +215,17 @@ class Battle:
                     battle_over = self.is_game_over(p1_HP)
                 if battle_over:
                     break
-                # p1 turn
+                # p1 turn (slower)
                 if self.is_mobile(p1_pkmn):
-                    print(self.player1)
-                    print()
-                    self.player1.take_turn(p2_pkmn)
-                    p2_HP = p2_pkmn.getCurrentHP()
-                    battle_over = self.is_game_over(p2_HP)
+                    if p1_pkmn.flinchedThisTurn():
+                        print(p1_pkmn.getName() + " flinched!")
+                        p1_pkmn.setFlinch(False)
+                    else: # p1_pkmn did not flinch
+                        print(self.player1)
+                        print()
+                        self.player1.take_turn(p2_pkmn)
+                        p2_HP = p2_pkmn.getCurrentHP()
+                        battle_over = self.is_game_over(p2_HP)
                 if battle_over:
                     break
                 # psn, tox, or burn check (and decrement)

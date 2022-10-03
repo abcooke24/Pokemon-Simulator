@@ -180,13 +180,13 @@ class SecondaryEffects:
     """ Establishes all of the moves with secondary effects. Many of these
     effects are the chance that something (stat drop, flinch, status, etc)
     will occur."""
-    # moves w/chance to flinch
+    # moves w/chance to flinch (IMPLEMENTED)
     FLINCH_10 = Data.movelist.loc[Data.movelist['Effect'] == 'Flinch10']['Name'].tolist()
     FLINCH_20 = Data.movelist.loc[Data.movelist['Effect'] == 'Flinch20']['Name'].tolist()
     FLINCH_30 = Data.movelist.loc[Data.movelist['Effect'] == 'Flinch30']['Name'].tolist()
     FLINCH_CHANCE = FLINCH_10 + FLINCH_20 + FLINCH_30
 
-    # moves w/chance to inflict a status condition
+    # moves w/chance to inflict a status condition (IMPLEMENTED)
     BRN_10 = Data.movelist.loc[Data.movelist['Effect'] == 'BRN10']['Name'].tolist() + ["Tri Attack"]
     FRZ_10 = Data.movelist.loc[Data.movelist['Effect'] == 'FRZ10']['Name'].tolist() + ["Tri Attack"]
     PRZ_10 = Data.movelist.loc[Data.movelist['Effect'] == 'BRN10']['Name'].tolist() + ["Tri Attack"]
