@@ -1,6 +1,6 @@
 Key,Pokemon,Type I,Type II,HP,Atk,Def,SpA,SpD,Spe,Move 1 ,Move 2,Move 3,Move 4
 1,Venusaur,Grass,Poison,80,82,83,100,100,80,Stun Spore,Sleep Powder,Sludge Bomb,Growth
-2,Charizard,Fire,Flying,78,84,78,109,85,100,Seismic Toss,Wing Attack,Dragonbreath,Flamethrower
+2,Charizard,Fire,Flying,78,84,78,109,85,100,Seismic Toss,Wing Attack,Dragon Breath,Flamethrower
 3,Blastoise,Water,None,79,83,100,85,105,78,Hydro Pump,Mega Kick,Earthquake,Surf
 4,Butterfree,Bug,Flying,60,45,50,80,80,70,Gust,Psychic,Hyper Beam,Stun Spore
 5,Beedrill,Bug,Poison,65,80,40,40,80,75,Twineedle,Sludge Bomb,Tackle,Focus Energy
@@ -69,7 +69,7 @@ Key,Pokemon,Type I,Type II,HP,Atk,Def,SpA,SpD,Spe,Move 1 ,Move 2,Move 3,Move 4
 68,Chansey,Normal,None,250,5,5,35,105,50,Egg Bomb,Blizzard,Growl,Body Slam
 69,Tangela,Grass,None,65,55,115,100,40,60,Swift,Hyper Beam,Solar Beam,Sleep Powder
 70,Kangaskhan,Normal,None,105,95,80,40,80,90,Dizzy Punch,Tackle,Surf,Earthquake
-71,Seadra,Water,None,55,65,95,95,45,85,Hydro Pump,Blizzard,Surf,Dragonbreath
+71,Seadra,Water,None,55,65,95,95,45,85,Hydro Pump,Blizzard,Surf,Dragon Breath
 72,Seaking,Water,None,80,92,65,65,80,68,Surf,Horn Attack,Waterfall,Hydro Pump
 73,Starmie,Water,Psychic,60,75,85,100,85,115,Psychic,Hydro Pump,Thunder,Tackle
 74,Mr. Mime,Psychic,None,40,45,65,100,120,90,Psybeam,Psychic,Tackle,Thunder Wave
@@ -80,7 +80,7 @@ Key,Pokemon,Type I,Type II,HP,Atk,Def,SpA,SpD,Spe,Move 1 ,Move 2,Move 3,Move 4
 79,Pinsir,Bug,None,65,125,100,55,70,85,Fury Cutter,Horn Attack,Submission,Earthquake
 80,Tauros,Normal,None,75,100,95,40,70,110,Take Down,Tackle,Seismic Toss,Body Slam
 81,Magikarp,Water,None,20,10,55,15,20,80,Splash, Splash, Splash, Splash
-82,Gyarados,Water,Flying,95,125,79,60,100,81,Waterfall,Dragonbreath,Surf,Earthquake
+82,Gyarados,Water,Flying,95,125,79,60,100,81,Waterfall,Dragon Breath,Surf,Earthquake
 83,Lapras,Water,Ice,130,85,80,85,95,60,Waterfall,Surf,Ice Beam,Thunderbolt
 85,Eevee,Normal,None,55,55,50,45,65,55,Take Down,Quick Attack,Tackle,Growl
 86,Vaporeon,Water,None,130,65,60,110,95,65,Waterfall,Surf,Ice Beam,Quick Attack
@@ -94,7 +94,7 @@ Key,Pokemon,Type I,Type II,HP,Atk,Def,SpA,SpD,Spe,Move 1 ,Move 2,Move 3,Move 4
 94,Articuno,Ice,Flying,90,85,100,95,125,85,Blizzard,Gust,Ice Beam,Wing Attack
 95,Zapdos,Electric,Flying,90,90,85,125,90,100,Thunder,Thunderbolt,Gust,Drill Peck
 96,Moltres,Fire,Flying,90,100,90,125,85,90,Fire Blast,Flamethrower,Gust,Wing Attack
-97,Dragonair,Dragon,None,61,84,65,70,70,70,Dragonbreath,Fire Blast,Thunder Wave,Headbutt
-98,Dragonite,Dragon,Flying,91,134,95,100,100,80,Dragonbreath,Wing Attack,Thunder,Hyper Beam
+97,Dragonair,Dragon,None,61,84,65,70,70,70,Dragon Breath,Fire Blast,Thunder Wave,Headbutt
+98,Dragonite,Dragon,Flying,91,134,95,100,100,80,Dragon Breath,Wing Attack,Thunder,Hyper Beam
 99,Mewtwo,Psychic,None,106,110,90,154,90,130,Psychic,Ice Beam,Fire Blast,Thunder
 100,Mew,Psychic,None,100,100,100,100,100,100,Psychic,Flamethrower,Tackle,Ice Beam

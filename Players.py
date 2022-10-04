@@ -2,7 +2,8 @@
 
 import random, math
 from PokemonGenerator import Pokemon
-from Constants import Statuses, Type, SecondaryEffects
+from Constants import Statuses, Type
+from Moves import SecondaryEffects, StatusMoves
 
 class Player:
     """ Base class for the Player
@@ -29,6 +30,7 @@ class Player:
         Parameters:
             randNo: Randomly generated number between 0 and 15
         """
+        print("Crit roll: {}".format(randNo))
         if randNo == 0:
             return True
         else:
@@ -42,6 +44,7 @@ class Player:
         Moves have either a 10, 20, or 30 percent chance to cause flinching.
         """
         flinch_roll = random.randint(1, 10)
+        print("Flinch roll: {}".format(flinch_roll))
         move_name = flinch_move.getName()
         if move_name in SecondaryEffects.FLINCH_10:
             if flinch_roll == 1:
@@ -54,38 +57,103 @@ class Player:
                 return True
         return False
     
-    def statusChanceHandler(status_move, defender):
+    def statusChanceHandler(self, status_move, defender):
         """ Determines whether or not the defending pokemon will be inflicted
         with a certain status condition. Chances range from 10-40%. 
         
         Confusion is the only status condition that can stack on top of another
         """
         status_roll = random.randint(1, 10)
+        print("Status roll: {}".format(status_roll))
         name = status_move.getName()
         # I need to optimize this, it hurts to look at
-        if (name in SecondaryEffects.BRN_10 and status_roll == 1
-        and defender.getStatus() == Statuses.HEALTHY):
-            defender.setStatus(Statuses.BRN)
-        elif (name in SecondaryEffects.FRZ_10 and status_roll == 1
-        and defender.getStatus() == Statuses.HEALTHY):
-            defender.setStatus(Statuses.FRZ)
-        elif (name in SecondaryEffects.PRZ_10 and status_roll == 1
-        and defender.getStatus() == Statuses.HEALTHY):
-            defender.setStatus(Statuses.PRZ)
-        elif (name in SecondaryEffects.CON_10 and status_roll == 1):
-            defender.setStatus(Statuses.CON)
-        elif (name in SecondaryEffects.CON_10 and (status_roll == 1
-        or status_roll == 2)):
-            defender.setStatus(Statuses.CON)
-        elif (name in SecondaryEffects.PRZ_30 and status_roll >= 1
-        and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY):
-            defender.setStatus(Statuses.PRZ)
-        elif (name in SecondaryEffects.PSN_30 and status_roll >= 1
-        and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY):
-            defender.setStatus(Statuses.PSN)
-        elif (name in SecondaryEffects.PSN_40 and status_roll >= 1
-        and status_roll <= 4 and defender.getStatus() == Statuses.HEALTHY):
-            defender.setStatus(Statuses.PSN)
+        if name == "Tri Attack" and defender.getStatus == Statuses.HEALTHY:
+            tri_roll = random.randint(1,3)
+            if tri_roll == 1 and not Type.FIRE in defender.getBothTypes():
+                defender.setStatus(Statuses.BRN)
+            elif tri_roll == 1 and Type.FIRE in defender.getBothTypes():
+                tri_roll = random.randint(2,3)
+            elif tri_roll == 2:
+                defender.setStatus(Statuses.FRZ)
+            elif tri_roll == 3:
+                defender.setStatus(Statuses.PRZ)
+        else:
+            if (name in SecondaryEffects.BRN_10 and status_roll == 1
+            and defender.getStatus() == Statuses.HEALTHY and not Type.FIRE
+            in defender.getBothTypes()):
+                defender.setStatus(Statuses.BRN)
+            elif (name in SecondaryEffects.FRZ_10 and status_roll == 1
+            and defender.getStatus() == Statuses.HEALTHY and not Type.ICE
+            in defender.getBothTypes()):
+                defender.setStatus(Statuses.FRZ)
+            elif (name in SecondaryEffects.PRZ_10 and status_roll == 1
+            and defender.getStatus() == Statuses.HEALTHY):
+                defender.setStatus(Statuses.PRZ)
+            elif (name in SecondaryEffects.CON_10 and status_roll == 1):
+                defender.setStatus(Statuses.CON)
+            elif (name in SecondaryEffects.CON_20 and (status_roll == 1
+            or status_roll == 2)):
+                defender.setStatus(Statuses.CON)
+            elif (name in SecondaryEffects.PRZ_30 and status_roll >= 1
+            and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY):
+                defender.setStatus(Statuses.PRZ)
+            elif (name in SecondaryEffects.PSN_30 and status_roll >= 1
+            and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY
+            and not Type.POISON in defender.getBothTypes()):
+                defender.setStatus(Statuses.PSN)
+            elif (name in SecondaryEffects.PSN_40 and status_roll >= 1
+            and status_roll <= 4 and defender.getStatus() == Statuses.HEALTHY
+            and not Type.POISON in defender.getBothTypes()):
+                defender.setStatus(Statuses.PSN)
+
+    def statDropHandler(self, move, defender):
+        """ Handles moves that have a chance to drop the defending Pokemon's stats
+        
+        Parameters:
+            move (Move) = the move with a chance to drop one of the defending 
+            Pokemon's stats
+            defender (Pokemon) = the defending Pokemon
+
+        Side Effects:
+            Calls the Pokemon setCurrentStat method
+        """
+        name = move.getName()
+        stat_drop_roll = random.randint(1,10)
+        print("Stat drop roll: {}".format(stat_drop_roll))
+        if stat_drop_roll == 1:
+            if name in SecondaryEffects.ATTACK_DROP_10:
+                defender.setCurrentStat("Attack", -1)
+            elif name in SecondaryEffects.SPDEF_DROP_10:
+                defender.setCurrentStat("SpDef", -1)
+            elif name in SecondaryEffects.SPEED_DROP_10:
+                defender.setCurrentStat("Speed", -1)
+
+    def HPchange(self, move, damage_dealt):
+        """ Calculates recoil, drained HP based on Bulbapedia's list of moves
+        with recoil damage. The link to these are below:
+        https://bulbapedia.bulbagarden.net/wiki/Recoil#Moves_with_recoil_damage
+        https://bulbapedia.bulbagarden.net/wiki/Category:HP-draining_moves
+
+        Parameters:
+            move (Move) = the move with recoil used by the attacking Pokemon.
+            It can be assumed that this move is in the RECOIL list.
+            damage_dealt (int) = the amount of damage the attacking Pokemon dealt
+            with the recoil move.
+
+        Returns:
+            recoil (int): the amount of recoil damage the attacking Pokemon 
+            will take.
+        """
+        name = move.getName()
+        if name in SecondaryEffects.RECOIL_3:
+            net_change = math.floor(damage_dealt / 3)
+            print("should apply recoil")
+        elif name in SecondaryEffects.RECOIL_4:
+            net_change = math.floor(damage_dealt / 4)
+            print("should apply recoil")
+        elif name in SecondaryEffects.ABSORB:
+            net_change = math.floor(damage_dealt / -2)
+        return net_change
 
     def damageCalc(self, selected, defender):
         """ Calculates damage based on the official formula as displayed on
@@ -102,6 +170,7 @@ class Player:
             selected (Move): the selected move
             defender (Pokemon): the opposing Pokemon
         """
+        name = selected.getName()
         # Attack / Defense (depicted as "A/D" on bulbapedia)
         if selected.getCategory() == "Physical":
             ad_ratio = self.pokemon.getAttack() / defender.getDefense()
@@ -109,11 +178,20 @@ class Player:
             ad_ratio = self.pokemon.getSpAtk() / defender.getSpdef()
             # Status moves have yet to be implemented, so no damage is returned
         damage = ((42 * selected.getPower() * ad_ratio) / 50) + 2
+        # Checks if super effective, not very effective, or not effective
+        damage = damage * selected.effect_multiplier(
+            defender.getTypes(0), defender.getTypes(1))
         # Checks for a critical hit
         if self.pokemon.hasCritBoost():
-            crit_check = random.randint(0,3)
+            if name in SecondaryEffects.HIGH_CRIT:
+                crit_check = 0
+            else: # not a high-crit move
+                crit_check = random.randint(0,1)
         else: # not crit-boosted
-            crit_check = random.randint(0,15)
+            if name in SecondaryEffects.HIGH_CRIT:
+                crit_check = random.randint(0,7)
+            else: # not a high-crit move
+                crit_check = random.randint(0,15)
         if self.criticalHit(crit_check):
             damage *= 2
             print("A critical hit!")
@@ -121,19 +199,14 @@ class Player:
         if (selected.getType() == self.pokemon.getTypes(0)
         or selected.getType() == self.pokemon.getTypes(1)):
             damage *= 1.5
-        # Checks if super effective, not very effective, or not effective
-        damage = damage * selected.effect_multiplier(
-            defender.getTypes(0), defender.getTypes(1))
         damage *= (random.randint(85,100) / 100)
-        damage = math.floor(damage)
-        print(damage)
+        damage = math.floor(damage) # debugging purposes
+        print("Damage: {}".format(damage))
         if (self.pokemon.getSpeed() >= defender.getSpeed() and 
-        selected in SecondaryEffects.FLINCH_CHANCE):
-            flinched = self.flinch(selected, defender)
+        name in SecondaryEffects.FLINCH_CHANCE):
+            flinched = self.flinch(selected)
             if flinched:
                 defender.setFlinch(True)
-        if selected in SecondaryEffects.STATUS_INFLICT_CHANCE:
-            self.statusChanceHandler(selected, defender)
         return damage
 
     def executeStatus(self, selected, defender):
@@ -148,7 +221,7 @@ class Player:
         """
         user = self.getPokemon()
         move = selected.getName()
-        if move in Statuses.STATUS_INFLICT:
+        if move in StatusMoves.STATUS_INFLICT:
             if defender.getStatus() != Statuses.HEALTHY:
                 print("But it failed!") # should swap spots with next piece of code
                 return
@@ -162,37 +235,43 @@ class Player:
                     return
                 else: # the move does affect the defending Pokemon
                     name = defender.getName()
-                    if move in Statuses.SLP_INFLICT:
+                    if move in StatusMoves.SLP_INFLICT:
                         defender.setStatus(Statuses.SLP)
-                        print(name + " fell asleep")
                         return
-                    elif move in Statuses.PRZ_INFLICT:
+                    elif move in StatusMoves.PRZ_INFLICT:
                         defender.setStatus(Statuses.PRZ)
-                        print(name + " is paralyzed.")
-                        print("It may be unable to move!")
                         return 
-                    elif move in Statuses.BRN_INFLICT:
-                        defender.setStatus(Statuses.BRN)
-                        print(name + " was burned!")
-                        return
-                    elif move in Statuses.PSN_INFLICT:
+                    # elif move in Statuses.BRN_INFLICT:
+                        # defender.setStatus(Statuses.BRN)
+                        # return
+                    elif move in StatusMoves.PSN_INFLICT:
                         defender.setStatus(Statuses.PSN)
-                        print(name + " was poisoned!")
                         return
                     else: # move == "Toxic" (not implemented yet)
                         defender.setStatus(Statuses.TOX)
-                        print(name + " was badly poisoned!")
                         return
-        elif move in Statuses.STAT_BOOST or move in Statuses.STAT_DROP:
+        elif move in StatusMoves.STAT_BOOST or move in StatusMoves.STAT_DROP:
             # there will be more
-            if move in Statuses.ATK_BOOST:
+            if move in StatusMoves.ATK_BOOST:
                 user.setCurrentStat("Attack", 1)
-            elif move in Statuses.ATK_DROP:
+            elif move in StatusMoves.ATK_DROP:
                 defender.setCurrentStat("Attack", -1)
-            if move in Statuses.DEF_BOOST:
+            if move in StatusMoves.DEF_BOOST:
                 user.setCurrentStat("Defense", 1)
-            if move in Statuses.SPATK_BOOST:
-                user.setCurrentStat("Special Attack", 1)
+            elif move in StatusMoves.DEF_BOOST_2:
+                user.setCurrentStat("Defense", 2)
+            elif move in StatusMoves.DEF_DROP:
+                defender.setCurrentStat("Defense", -1)
+            elif move in StatusMoves.DEF_DROP_2:
+                defender.setCurrentStat("Defense", -2)
+            if move in StatusMoves.SPATK_BOOST:
+                user.setCurrentStat("SpAtk", 1)
+            if move in StatusMoves.SPDEF_BOOST_2:
+                user.setCurrentStat("SpDef", 2)
+            if move in StatusMoves.SPEED_BOOST_2:
+                user.setCurrentStat("Speed", 2)
+            elif move in StatusMoves .SPEED_DROP:
+                defender.setCurrentStat("Speed", -1)
             return
         else: # move in Statuses.CRIT_BOOST (assumed to be "Focus Energy" for now)
             if user.hasCritBoost():
@@ -216,6 +295,21 @@ class Player:
 
 class ComputerPlayer(Player):
     """ A computer tic tac toe player. Chooses its moves at random. """
+    def damageCalc(self, selected, defender):
+        return super().damageCalc(selected, defender)
+    
+    def HPchange(self, move, damage_dealt):
+        return super().HPchange(move, damage_dealt)
+
+    def statDropHandler(self, move, defender):
+        return super().statDropHandler(move, defender)
+    
+    def executeStatus(self, selected, defender):
+        return super().executeStatus(selected, defender)
+    
+    def statusChanceHandler(self, status_move, defender):
+        return super().statusChanceHandler(status_move, defender)
+
     def take_turn(self, other_pkmn):
         """ Randomly selects a move.
         
@@ -223,23 +317,36 @@ class ComputerPlayer(Player):
             other_pkmn (Pokemon): the opposing Pokemon.
         
         Side effects:
-            Does damage to opposing Pokemon.
+            Does damage to opposing Pokemon unless the move misses
+            May inflict crash damage to attacking Pokemon
         """
         index = random.randint(0,3)
         move = self.pokemon.getMoves(index)
-
-        print(self.pokemon.getName() + " used " + move.getName() + "!")
+        name = move.getName()
+        print(self.pokemon.getName() + " used " + name + "!")
         if move.getAccuracy() != "None":
             if not move.accuracyRoll(random.randint(0,99)):
-                print("The attack missed!")
+                if name in SecondaryEffects.CRASH:
+                    print(self.pokemon.getName() + " kept going and crashed!")
+                    crash_damage = math.floor(self.pokemon.getMaxHP / 2)
+                    self.pokemon.setCurrentHP(crash_damage)
+                else: # move does not inflict crash damage
+                    print("The attack missed!")
                 return
         if (move.getCategory() == "Physical" 
         or move.getCategory() == "Special"):
-            damage = super().damageCalc(move, other_pkmn)
+            damage = self.damageCalc(move, other_pkmn)
             other_pkmn.setCurrentHP(damage)
+            if name in SecondaryEffects.RECOIL or name in SecondaryEffects.ABSORB:
+                change = self.HPchange(move, damage)
+                self.pokemon.setCurrentHP(change)
+            elif name in SecondaryEffects.STAT_DROP_CHANCE:
+                self.statDropHandler(move, other_pkmn)
+            elif name in SecondaryEffects.STATUS_INFLICT_CHANCE:
+                self.statusChanceHandler(move, other_pkmn)
             return
         else: # Move type is "Status"
-            super().executeStatus(move, other_pkmn)
+            self.executeStatus(move, other_pkmn)
             return
 
     def __str__(self):
@@ -258,6 +365,18 @@ class HumanPlayer(Player):
     def damageCalc(self, selected, defender):
         return super().damageCalc(selected, defender)
 
+    def HPchange(self, move, damage_dealt):
+        return super().HPchange(move, damage_dealt)
+
+    def statDropHandler(self, move, defender):
+        return super().statDropHandler(move, defender)
+    
+    def executeStatus(self, selected, defender):
+        return super().executeStatus(selected, defender)
+
+    def statusChanceHandler(self, status_move, defender):
+        return super().statusChanceHandler(status_move, defender)
+
     def take_turn(self, other_pkmn):
         """ Selects a move and calculates the damage.
         
@@ -265,7 +384,8 @@ class HumanPlayer(Player):
             other_pkmn (Pokemon): the opposing Pokemon.
         
         Side effects:
-            Does damage to opposing Pokemon.
+            Does damage to opposing Pokemon unless the move misses
+            May inflict crash damage to attacking Pokemon
         """
         while True:
             select = input("Select a move by typing the corresponding number: ")
@@ -276,18 +396,31 @@ class HumanPlayer(Player):
                 continue
             if index >= 1 and index <= 4:
                 move = self.pokemon.getMoves(index - 1)
-                print(self.pokemon.getName() + " used " + move.getName() + "!")
+                name = move.getName()
+                print(self.pokemon.getName() + " used " + name + "!")
                 if move.getAccuracy() != "None":
                     if not move.accuracyRoll(random.randint(0,99)):
-                        print("The attack missed!")
+                        if name in SecondaryEffects.CRASH:
+                            print(self.pokemon.getName() + " kept going and crashed!")
+                            crash_damage = math.floor(self.pokemon.getMaxHP / 2)
+                            self.pokemon.setCurrentHP(crash_damage)
+                        else: # move does not inflict crash damage
+                            print("The attack missed!")
                         return
                 if (move.getCategory() == "Physical" 
                 or move.getCategory() == "Special"):
-                    damage = super().damageCalc(move, other_pkmn)
+                    damage = self.damageCalc(move, other_pkmn)
                     other_pkmn.setCurrentHP(damage)
-                    return
+                    if name in SecondaryEffects.RECOIL or name in SecondaryEffects.ABSORB:
+                        change = self.HPchange(move, damage)
+                        self.pokemon.setCurrentHP(change)
+                    elif name in SecondaryEffects.STAT_DROP_CHANCE:
+                        self.statDropHandler(move, other_pkmn)
+                    elif name in SecondaryEffects.STATUS_INFLICT_CHANCE:
+                        self.statusChanceHandler(move, other_pkmn)
+                    return  
                 else: # Move type is "Status"
-                    super().executeStatus(move, other_pkmn)
+                    self.executeStatus(move, other_pkmn)
                     return
             else:
                 print("Please enter a number between 1 and 4")

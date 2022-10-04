@@ -201,6 +201,9 @@ class Pokemon:
 
     def getMaxHP(self):
         return self.maxHP
+    
+    def getCurrentHP(self):
+        return self.currentHP
 
     def getAttack(self):
         return self.currentAttack
@@ -225,9 +228,6 @@ class Pokemon:
             this Pokemon's four moves will be returned
         """
         return self.moves.copy()[index]
-
-    def getCurrentHP(self):
-        return self.currentHP
 
     def getStatus(self):
         return self.status
@@ -292,6 +292,8 @@ class Pokemon:
         self.currentHP -= damage
         if self.currentHP < 0:
             self.currentHP = 0
+        elif self.currentHP > self.maxHP:
+            self.currentHP = self.maxHP
 
     def setCurrentStat(self, statname, stages):
         """ Boosts or drops a current stat based on the opponent's move. The
@@ -371,7 +373,7 @@ class Pokemon:
     def setCritBoost(self):
         self.critBoost = True
     
-    def flinchedThisTurn(self):
+    def flinched(self):
         return self.flinchedThisTurn
 
     def setFlinch(self, flinched):

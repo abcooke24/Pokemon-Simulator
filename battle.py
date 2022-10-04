@@ -194,7 +194,7 @@ class Battle:
                         break
                 # p2 turn (slower)
                 if self.is_mobile(p2_pkmn):
-                    if p2_pkmn.flinchedThisTurn():
+                    if p2_pkmn.flinched():
                         print(p2_pkmn.getName() + " flinched!")
                         p2_pkmn.setFlinch(False)
                     else: # p2_pkmn did not flinch
@@ -217,7 +217,7 @@ class Battle:
                     break
                 # p1 turn (slower)
                 if self.is_mobile(p1_pkmn):
-                    if p1_pkmn.flinchedThisTurn():
+                    if p1_pkmn.flinched():
                         print(p1_pkmn.getName() + " flinched!")
                         p1_pkmn.setFlinch(False)
                     else: # p1_pkmn did not flinch

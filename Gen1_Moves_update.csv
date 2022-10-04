@@ -1,6 +1,6 @@
 Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Implementation,Effect
 1,Pound,Normal,Physical,Tough,35,40,100,1,Y,N/A
-2,Karate Chop,Fighting,Physical,Tough,25,50,100,1,Y,High Crit
+2,Karate Chop,Fighting,Physical,Tough,25,50,100,1,Y,High-Crit
 3,Double Slap,Normal,Physical,Cute,10,15,85,1,T,Multi-Hit
 4,Comet Punch,Normal,Physical,Tough,15,18,85,1,T,Multi-Hit
 5,Mega Punch,Normal,Physical,Tough,20,80,85,1,Y,N/A
@@ -34,9 +34,9 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Implementation,Eff
 33,Tackle,Normal,Physical,Tough,35,40,None,1,Y,N/A
 34,Body Slam,Normal,Physical,Tough,15,85,100,1,YNS,PRZ10
 35,Wrap,Normal,Physical,Tough,20,15,None,1,T,Trap
-36,Take Down,Normal,Physical,Tough,20,90,85,1,YNS,Recoil
+36,Take Down,Normal,Physical,Tough,20,90,85,1,YNS,Recoil4
 37,Thrash,Normal,Physical,Tough,10,120,100,1,YNS,Thrash-like
-38,Double-Edge,Normal,Physical,Tough,15,120,100,1,YNS,Recoil
+38,Double-Edge,Normal,Physical,Tough,15,120,100,1,YNS,Recoil3
 39,Tail Whip,Normal,Status,Cute,30,None,100,1,Y,DEFdrop
 40,Poison Sting,Poison,Physical,Clever,35,15,100,1,YNS,PSN30
 41,Twineedle,Bug,Physical,Cool,20,25,100,1,T,2Hit
@@ -64,7 +64,7 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Implementation,Eff
 63,Hyper Beam,Normal,Special,Cool,5,150,90,1,YNS,Recharge
 64,Peck,Flying,Physical,Cool,35,35,100,1,Y,N/A
 65,Drill Peck,Flying,Physical,Cool,20,80,100,1,Y,N/A
-66,Submission,Fighting,Physical,Cool,20,80,80,1,YNS,Recoil
+66,Submission,Fighting,Physical,Cool,20,80,80,1,YNS,Recoil4
 67,Low Kick,Fighting,Physical,Tough,20,None,None,1,NN,Weight
 68,Counter,Fighting,Physical,Tough,20,None,100,1,N,Physical Retaliation 
 69,Seismic Toss,Fighting,Physical,Tough,20,None,100,1,N,SetDamage
@@ -164,3 +164,10 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Implementation,Eff
 163,Slash,Normal,Physical,Cool,20,70,100,1,YNS,High-Crit
 164,Substitute,Normal,Status,Cute,10,None,None,1,NN,Unique
 165,Hit Self,None,Physical,Who Knows,N/A,40,None,1,Y,Confusion Only
+166,Sludge Bomb,Poison,Special,Tough,10,90,100,2,Y,PSN30
+167,Fury Cutter,Bug,Physical,Cool,20,40,95,2,N,Consecutive
+168,Dragon Breath,Dragon,Special,Cool,20,60,100,2,Y,PRZ30
+169,Selfdestruct,Normal,Physical,Beauty,5,200,100,1,N,Selfdestruct
+170,Hi Jump Kick,Fighting,Physical,Cool,10,130,90,1,Y,Crash
+171,Headbutt,Normal,Physical,Tough,15,70,100,1,Y,Flinch30
+172,Icy Wind,Ice,Special,Beauty,15,55,95,2,N,SpeedDrop100
