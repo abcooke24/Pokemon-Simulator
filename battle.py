@@ -67,14 +67,12 @@ class Battle:
         status = pokemon.getStatus()
         name = pokemon.getName()
         if status == Statuses.HEALTHY:
-            return True
+            pass
         elif status == Statuses.PRZ:
             PRZ_roll = random.randint(0,3)
             if PRZ_roll == 0:
                 print(name + " is fully paralyzed!")
                 return False
-            else:
-                return True
         elif status == Statuses.SLP:
             sleeping_turns = pokemon.getInflictedTurns()
             if sleeping_turns == 0:
@@ -87,7 +85,6 @@ class Battle:
                     print(name + " woke up!")
                     pokemon.setStatus(Statuses.HEALTHY)
                     pokemon.resetInflictedTurns()
-                    return True
                 else:
                     print(name + " is fast asleep!")
                     pokemon.incrementInflictedTurns()
@@ -96,25 +93,25 @@ class Battle:
                 print(name + " woke up!")
                 pokemon.setStatus(Statuses.HEALTHY)
                 pokemon.resetInflictedTurns()
-                return True
         elif status == Statuses.FRZ:
             FRZ_roll = random.randint(0,4)
             if FRZ_roll == 0:
                 print(name + " thawed out!")
                 pokemon.setStatus(Statuses.HEALTHY)
-                return True
             else:
                 print(name + " is frozen solid!")
                 return False
-        elif status == Statuses.CON:
-            confused_turns = pokemon.getInflictedTurns()
+        else: # status == (TOX, PSN, OR BRN)
+            return True
+        if pokemon.is_confused():
+            confused_turns = pokemon.getConfusedTurns()
             print(name + " is confused!")
             if confused_turns >= 2:
                 snap_roll = random.randint(confused_turns, 6)
                 if snap_roll == confused_turns:
                     print(name + " snapped out of confusion!")
                     pokemon.setStatus(Statuses.HEALTHY)
-                    pokemon.resetInflictedTurns()
+                    pokemon.resetConfusedTurns()
                     return True
             else:
                 print(name + " is confused!")
@@ -125,13 +122,12 @@ class Battle:
                     damage = ((42 * 40 * ad_ratio) / 50) + 2
                     pokemon.setCurrentHP(damage)
                     print(name + " hit itself in confusion!")
-                    pokemon.incrementInflictedTurns()
+                    pokemon.incrementConfusedTurns()
                     return False
                 else: # confusion_roll == 1
-                    pokemon.incrementInflictedTurns()
+                    pokemon.incrementConfusedTurns()
                     return True
-        else: # status == (TOX, PSN, OR BRN)
-            return True
+        return True
 
     def chip_damage(self, status, pokemon):
         name = pokemon.getName()

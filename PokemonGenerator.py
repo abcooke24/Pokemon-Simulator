@@ -53,6 +53,8 @@ class Pokemon:
         self.types = ([info.values[2],info.values[3]])
         self.status = Statuses.HEALTHY
         self.inflicted_turns = 0
+        self.confused = False
+        self.confusedTurns = 0
 
         # Sets stats with the setStats; not subject to change; not gettable
         self.EVs = self.setEVs()
@@ -74,6 +76,7 @@ class Pokemon:
         self.currentSpeed = self.speed * 1
         self.critBoost = False
         self.flinchedThisTurn = False
+
 
         # A different function will construct each move
         self.moves = self.setMoves((
@@ -381,3 +384,21 @@ class Pokemon:
             self.flinchedThisTurn = True
         else:
             self.flinchedThisTurn = False
+    
+    def is_confused(self):
+        return self.confused
+
+    def set_confusion(self, confusion):
+        if confusion:
+            self.confused = True
+        else:
+            self.confused = False
+
+    def getConfusedTurns(self):
+        return self.confusedTurns
+    
+    def resetConfusedTurns(self):
+        self.confusedTurns = 0
+    
+    def incrementConfusedTurns(self):
+        self.confusedTurns += 1

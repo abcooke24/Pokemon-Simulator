@@ -119,6 +119,8 @@ class Move:
         return multiplier
 
 class StatusMoves:
+    """ Various collections of moves with the category "Status" 
+    """
     # Moves that inflict status conditions based on movelist
     SLP_INFLICT = Data.movelist.loc[Data.movelist['Effect'] == 'SLP Inflict']['Name'].tolist()
     PRZ_INFLICT = Data.movelist.loc[Data.movelist['Effect'] == 'PRZ Inflict']['Name'].tolist()

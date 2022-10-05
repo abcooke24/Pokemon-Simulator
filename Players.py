@@ -90,10 +90,10 @@ class Player:
             and defender.getStatus() == Statuses.HEALTHY):
                 defender.setStatus(Statuses.PRZ)
             elif (name in SecondaryEffects.CON_10 and status_roll == 1):
-                defender.setStatus(Statuses.CON)
+                defender.set_confusion(True)
             elif (name in SecondaryEffects.CON_20 and (status_roll == 1
             or status_roll == 2)):
-                defender.setStatus(Statuses.CON)
+                defender.set_confusion(False)
             elif (name in SecondaryEffects.PRZ_30 and status_roll >= 1
             and status_roll <= 3 and defender.getStatus() == Statuses.HEALTHY):
                 defender.setStatus(Statuses.PRZ)
@@ -118,6 +118,8 @@ class Player:
             Calls the Pokemon setCurrentStat method
         """
         name = move.getName()
+        if name in SecondaryEffects.SPEED_DROP_100:
+            defender.setCurrentStat("Speed", -1)
         stat_drop_roll = random.randint(1,10)
         print("Stat drop roll: {}".format(stat_drop_roll))
         if stat_drop_roll == 1:
@@ -234,7 +236,6 @@ class Player:
                     print ("It had no effect!")
                     return
                 else: # the move does affect the defending Pokemon
-                    name = defender.getName()
                     if move in StatusMoves.SLP_INFLICT:
                         defender.setStatus(Statuses.SLP)
                         return
@@ -247,6 +248,8 @@ class Player:
                     elif move in StatusMoves.PSN_INFLICT:
                         defender.setStatus(Statuses.PSN)
                         return
+                    elif move in StatusMoves.CON_INFLICT:
+                        defender.set_confusion(True)
                     else: # move == "Toxic" (not implemented yet)
                         defender.setStatus(Statuses.TOX)
                         return

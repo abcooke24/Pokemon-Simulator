@@ -8,7 +8,6 @@ class Type:
     """ Establishes all 16 (including "None") Pokemon types.
         This includes their offensive relationships: super-effective,
         not very effective, and not effective."""
-
     NORMAL = "Normal"
     FIRE = "Fire"
     WATER = "Water"
@@ -104,7 +103,7 @@ class Statuses:
     CON = "Confuse"
 
     # Types of statuses
-    IMMOBILIZERS = [PRZ, SLP, FRZ, CON]
+    IMMOBILIZERS = [PRZ, SLP, FRZ]
     CHIP_DAMAGE = [PSN, BRN, TOX]
 
 class Natures:
