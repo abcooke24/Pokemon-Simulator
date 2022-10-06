@@ -11,7 +11,6 @@ from Constants import Statuses
 
     TO IMPLEMENT:
         - More Pokemon
-        - Secondary move effects (!)
         - 2v2 format
         - Smarter AI (!)
         - Different battle mode (!)
@@ -66,6 +65,11 @@ class Battle:
         # Make functions out of repeated code (eventually)
         status = pokemon.getStatus()
         name = pokemon.getName()
+        if (pokemon.is_recharging() and pokemon.getStatus() != Statuses.SLP
+        and pokemon.getStatus != Statuses.FRZ):
+            print(name + " is recharging!")
+            pokemon.setRecharging(False)
+            return False
         if status == Statuses.HEALTHY:
             pass
         elif status == Statuses.PRZ:

@@ -14,6 +14,11 @@ class Pokemon:
         be "Healthy" by default.
         inflicted_turns (int): The # of turns this Pokemon has been inflicted
         with a status condition for. Relevant for TOX and SLP
+        confused (boolean): Whether or not this Pokemon is confused
+        confusedTurns (int): The # of turns this Pokemon has been confused for.
+        Ranges from 0-5.
+        recharging (boolean): whether or not this Pokemon has to recharge this
+        turn. Hyper beam is the only move that currently does this.
         EVs (int List): this Pokemon's Effort Values
         IVs (int List): this Pokemon's Individual Values
         nature (str List): string list representing this Pokemon's nature
@@ -55,6 +60,7 @@ class Pokemon:
         self.inflicted_turns = 0
         self.confused = False
         self.confusedTurns = 0
+        self.recharging = False
 
         # Sets stats with the setStats; not subject to change; not gettable
         self.EVs = self.setEVs()
@@ -76,7 +82,6 @@ class Pokemon:
         self.currentSpeed = self.speed * 1
         self.critBoost = False
         self.flinchedThisTurn = False
-
 
         # A different function will construct each move
         self.moves = self.setMoves((
@@ -402,3 +407,12 @@ class Pokemon:
     
     def incrementConfusedTurns(self):
         self.confusedTurns += 1
+
+    def is_recharging(self):
+        return self.recharging
+
+    def setRecharging(self, recharging):
+        if recharging:
+            self.recharging = True
+        else:
+            self.recharging = False

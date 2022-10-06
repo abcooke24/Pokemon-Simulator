@@ -284,6 +284,17 @@ class Player:
                 user.setCritBoost()
             return
     
+    def secondaryEffectHandler(self, name, move, damage, defender):
+        if name in SecondaryEffects.RECOIL or name in SecondaryEffects.ABSORB:
+            change = self.HPchange(move, damage)
+            self.pokemon.setCurrentHP(change)
+        elif name in SecondaryEffects.STAT_DROP_CHANCE:
+            self.statDropHandler(move, defender)
+        elif name in SecondaryEffects.STATUS_INFLICT_CHANCE:
+            self.statusChanceHandler(move, defender)
+        elif name in SecondaryEffects.RECHARGE:
+            self.pokemon.setRecharging(True)
+
     def take_turn(self):
         """ Selects a move and calculates the damage.
         
@@ -304,14 +315,8 @@ class ComputerPlayer(Player):
     def HPchange(self, move, damage_dealt):
         return super().HPchange(move, damage_dealt)
 
-    def statDropHandler(self, move, defender):
-        return super().statDropHandler(move, defender)
-    
-    def executeStatus(self, selected, defender):
-        return super().executeStatus(selected, defender)
-    
-    def statusChanceHandler(self, status_move, defender):
-        return super().statusChanceHandler(status_move, defender)
+    def secondaryEffectHandler(self, name, move, damage, defender):
+        return super().secondaryEffectHandler(name, move, damage, defender)
 
     def take_turn(self, other_pkmn):
         """ Randomly selects a move.
@@ -340,13 +345,7 @@ class ComputerPlayer(Player):
         or move.getCategory() == "Special"):
             damage = self.damageCalc(move, other_pkmn)
             other_pkmn.setCurrentHP(damage)
-            if name in SecondaryEffects.RECOIL or name in SecondaryEffects.ABSORB:
-                change = self.HPchange(move, damage)
-                self.pokemon.setCurrentHP(change)
-            elif name in SecondaryEffects.STAT_DROP_CHANCE:
-                self.statDropHandler(move, other_pkmn)
-            elif name in SecondaryEffects.STATUS_INFLICT_CHANCE:
-                self.statusChanceHandler(move, other_pkmn)
+            self.secondaryEffectHandler(name, move, damage, other_pkmn)
             return
         else: # Move type is "Status"
             self.executeStatus(move, other_pkmn)
@@ -367,18 +366,9 @@ class HumanPlayer(Player):
 
     def damageCalc(self, selected, defender):
         return super().damageCalc(selected, defender)
-
-    def HPchange(self, move, damage_dealt):
-        return super().HPchange(move, damage_dealt)
-
-    def statDropHandler(self, move, defender):
-        return super().statDropHandler(move, defender)
     
-    def executeStatus(self, selected, defender):
-        return super().executeStatus(selected, defender)
-
-    def statusChanceHandler(self, status_move, defender):
-        return super().statusChanceHandler(status_move, defender)
+    def secondaryEffectHandler(self, name, move, damage, defender):
+        return super().secondaryEffectHandler(name, move, damage, defender)
 
     def take_turn(self, other_pkmn):
         """ Selects a move and calculates the damage.
@@ -414,13 +404,7 @@ class HumanPlayer(Player):
                 or move.getCategory() == "Special"):
                     damage = self.damageCalc(move, other_pkmn)
                     other_pkmn.setCurrentHP(damage)
-                    if name in SecondaryEffects.RECOIL or name in SecondaryEffects.ABSORB:
-                        change = self.HPchange(move, damage)
-                        self.pokemon.setCurrentHP(change)
-                    elif name in SecondaryEffects.STAT_DROP_CHANCE:
-                        self.statDropHandler(move, other_pkmn)
-                    elif name in SecondaryEffects.STATUS_INFLICT_CHANCE:
-                        self.statusChanceHandler(move, other_pkmn)
+                    self.secondaryEffectHandler(name, move, damage, other_pkmn)
                     return  
                 else: # Move type is "Status"
                     self.executeStatus(move, other_pkmn)
