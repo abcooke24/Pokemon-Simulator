@@ -61,6 +61,8 @@ class Pokemon:
         self.confused = False
         self.confusedTurns = 0
         self.recharging = False
+        self.charging = False
+        self.chargingMove = None
 
         # Sets stats with the setStats; not subject to change; not gettable
         self.EVs = self.setEVs()
@@ -416,3 +418,21 @@ class Pokemon:
             self.recharging = True
         else:
             self.recharging = False
+
+    def is_charging(self):
+        return self.charging
+    
+    def set_charging(self, charging):
+        if charging:
+            self.charging = True
+        else:
+            self.charging = False
+
+    def getChargingMove(self):
+        return self.chargingMove
+
+    def setChargingMove(self, move):
+        self.chargingMove = move
+
+    def resetChargingMove(self):
+        self.chargingMove = None

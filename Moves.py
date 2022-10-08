@@ -172,7 +172,7 @@ class SecondaryEffects:
     SPEED_DROP_10 = Data.movelist.loc[Data.movelist['Effect'] == 'SpeedDrop10']['Name'].tolist()
     STAT_DROP_CHANCE = ATTACK_DROP_10 + SPDEF_DROP_10 + SPEED_DROP_10
 
-    # moves that always drop stats
+    # moves that always drop stats (IMPLEMENTED)
     SPEED_DROP_100 = Data.movelist.loc[Data.movelist['Effect'] == 'SpeedDrop100']['Name'].tolist()
 
     # moves that affect the user's HP in some way (IMPLEMENTED)
@@ -191,9 +191,10 @@ class SecondaryEffects:
     TWO_TURN = Data.movelist.loc[Data.movelist['Effect'] == '2Turn']['Name'].tolist()
     CONSECUTIVE = Data.movelist.loc[Data.movelist['Effect'] == 'SpeedDrop10']['Name'].tolist()
 
-    # moves involving multiple hits or chip damage
+    # moves involving multiple hits or chip damage (IMPLEMENTED)
     TWO_HIT = Data.movelist.loc[Data.movelist['Effect'] == '2Hit']['Name'].tolist()
     MULTI_HIT = Data.movelist.loc[Data.movelist['Effect'] == 'Multi-Hit']['Name'].tolist()
+    # may not implement trap moves
     TRAP = Data.movelist.loc[Data.movelist['Effect'] == 'Trap']['Name'].tolist()
 
     # move(s) with higher priority (may not implement)

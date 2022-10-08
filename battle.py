@@ -10,6 +10,7 @@ from Constants import Statuses
 """ This is a Pokemon battle simulator; it is unfinished.
 
     TO IMPLEMENT:
+        - Better movesets (!!!)
         - More Pokemon
         - 2v2 format
         - Smarter AI (!)
@@ -138,7 +139,7 @@ class Battle:
         if status == Statuses.BRN or status == Statuses.PSN:
             damage = math.floor(pokemon.getMaxHP() * 0.125)
             pokemon.setCurrentHP(damage)
-            pokemon.incrementInflictedTurns()
+            pokemon.incrementInflictedTurns() # can likely delete
         else: # status == TOX
             mutliplier = pokemon.getInflictedTurns() + 1
             tox_multiplier = math.floor(0.0625 * mutliplier)
@@ -231,11 +232,13 @@ class Battle:
                 # psn, tox, or burn check (and decrement)
                 if p1_pkmn.getStatus() in Statuses.CHIP_DAMAGE:
                     self.chip_damage(p1_pkmn.getStatus(), p1_pkmn)
+                    p1_HP = p1_pkmn.getCurrentHP()
                     battle_over = self.is_game_over(p1_HP)
                 if battle_over:
                     break
                 if p2_pkmn.getStatus() in Statuses.CHIP_DAMAGE:
                     self.chip_damage(p2_pkmn.getStatus(), p2_pkmn)
+                    p2_HP = p2_pkmn.getCurrentHP()
                     battle_over = self.is_game_over(p2_HP)
                 if battle_over:
                     break

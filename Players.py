@@ -1,5 +1,6 @@
 """ Human and computer Pokemon players """
 
+from audioop import mul
 import random, math
 from PokemonGenerator import Pokemon
 from Constants import Statuses, Type
@@ -131,7 +132,7 @@ class Player:
                 defender.setCurrentStat("Speed", -1)
 
     def HPchange(self, move, damage_dealt):
-        """ Calculates recoil, drained HP based on Bulbapedia's list of moves
+        """ Calculates recoil or drained HP based on Bulbapedia's list of moves
         with recoil damage. The link to these are below:
         https://bulbapedia.bulbagarden.net/wiki/Recoil#Moves_with_recoil_damage
         https://bulbapedia.bulbagarden.net/wiki/Category:HP-draining_moves
@@ -149,12 +150,13 @@ class Player:
         name = move.getName()
         if name in SecondaryEffects.RECOIL_3:
             net_change = math.floor(damage_dealt / 3)
-            print("should apply recoil")
+            print("Recoil: {}".format(net_change))
         elif name in SecondaryEffects.RECOIL_4:
             net_change = math.floor(damage_dealt / 4)
-            print("should apply recoil")
+            print("Recoil: {}".format(net_change))
         elif name in SecondaryEffects.ABSORB:
             net_change = math.floor(damage_dealt / -2)
+            print("Drained: {}".format(net_change * -1))
         return net_change
 
     def damageCalc(self, selected, defender):
@@ -173,42 +175,58 @@ class Player:
             defender (Pokemon): the opposing Pokemon
         """
         name = selected.getName()
-        # Attack / Defense (depicted as "A/D" on bulbapedia)
-        if selected.getCategory() == "Physical":
-            ad_ratio = self.pokemon.getAttack() / defender.getDefense()
-        else: # selected.getCategory() == "Special"
-            ad_ratio = self.pokemon.getSpAtk() / defender.getSpdef()
-            # Status moves have yet to be implemented, so no damage is returned
-        damage = ((42 * selected.getPower() * ad_ratio) / 50) + 2
-        # Checks if super effective, not very effective, or not effective
-        damage = damage * selected.effect_multiplier(
-            defender.getTypes(0), defender.getTypes(1))
-        # Checks for a critical hit
-        if self.pokemon.hasCritBoost():
-            if name in SecondaryEffects.HIGH_CRIT:
-                crit_check = 0
-            else: # not a high-crit move
-                crit_check = random.randint(0,1)
-        else: # not crit-boosted
-            if name in SecondaryEffects.HIGH_CRIT:
-                crit_check = random.randint(0,7)
-            else: # not a high-crit move
-                crit_check = random.randint(0,15)
-        if self.criticalHit(crit_check):
-            damage *= 2
-            print("A critical hit!")
-        # Checks for same type attack bonus (STAB)
-        if (selected.getType() == self.pokemon.getTypes(0)
-        or selected.getType() == self.pokemon.getTypes(1)):
-            damage *= 1.5
-        damage *= (random.randint(85,100) / 100)
-        damage = math.floor(damage) # debugging purposes
-        print("Damage: {}".format(damage))
-        if (self.pokemon.getSpeed() >= defender.getSpeed() and 
-        name in SecondaryEffects.FLINCH_CHANCE):
-            flinched = self.flinch(selected)
-            if flinched:
-                defender.setFlinch(True)
+        # evaluates the number of attacks the move will do
+        attacks_remaining = 1
+        if name in SecondaryEffects.TWO_HIT:
+            attacks_remaining = 2
+        elif name in SecondaryEffects.MULTI_HIT:
+            multi_hit_roll = random.randint(1,8)
+            if multi_hit_roll >= 1 and multi_hit_roll <= 3:
+                attacks_remaining = 2
+            elif multi_hit_roll >= 4 and multi_hit_roll <= 6:
+                attacks_remaining = 3
+            elif multi_hit_roll == 7:
+                attacks_remaining = 4
+            else: # multi_hit_roll == 8
+                attacks_remaining = 5
+        while attacks_remaining > 0:
+            # Attack / Defense (depicted as "A/D" on bulbapedia)
+            if selected.getCategory() == "Physical":
+                ad_ratio = self.pokemon.getAttack() / defender.getDefense()
+            else: # selected.getCategory() == "Special"
+                ad_ratio = self.pokemon.getSpAtk() / defender.getSpdef()
+                # Status moves have yet to be implemented, so no damage is returned
+            damage = ((42 * selected.getPower() * ad_ratio) / 50) + 2
+            # Checks if super effective, not very effective, or not effective
+            damage = damage * selected.effect_multiplier(
+                defender.getTypes(0), defender.getTypes(1))
+            # Checks for a critical hit
+            if self.pokemon.hasCritBoost():
+                if name in SecondaryEffects.HIGH_CRIT:
+                    crit_check = 0
+                else: # not a high-crit move
+                    crit_check = random.randint(0,1)
+            else: # not crit-boosted
+                if name in SecondaryEffects.HIGH_CRIT:
+                    crit_check = random.randint(0,7)
+                else: # not a high-crit move
+                    crit_check = random.randint(0,15)
+            if self.criticalHit(crit_check):
+                damage *= 2
+                print("A critical hit!")
+            # Checks for same type attack bonus (STAB)
+            if selected.getType() in self.pokemon.getBothTypes():
+                damage *= 1.5
+            damage *= (random.randint(85,100) / 100)
+            damage = math.floor(damage) # debugging purposes
+            print("Damage: {}".format(damage))
+            if (self.pokemon.getSpeed() >= defender.getSpeed() and 
+            name in SecondaryEffects.FLINCH_CHANCE):
+                flinched = self.flinch(selected)
+                if flinched:
+                    defender.setFlinch(True)
+            # decrement the number of attacks remaining, ends the turn if 0
+            attacks_remaining -= 1
         return damage
 
     def executeStatus(self, selected, defender):
@@ -306,7 +324,6 @@ class Player:
         """
         raise NotImplementedError
 
-
 class ComputerPlayer(Player):
     """ A computer tic tac toe player. Chooses its moves at random. """
     def damageCalc(self, selected, defender):
@@ -328,28 +345,43 @@ class ComputerPlayer(Player):
             Does damage to opposing Pokemon unless the move misses
             May inflict crash damage to attacking Pokemon
         """
-        index = random.randint(0,3)
-        move = self.pokemon.getMoves(index)
-        name = move.getName()
-        print(self.pokemon.getName() + " used " + name + "!")
-        if move.getAccuracy() != "None":
-            if not move.accuracyRoll(random.randint(0,99)):
-                if name in SecondaryEffects.CRASH:
-                    print(self.pokemon.getName() + " kept going and crashed!")
-                    crash_damage = math.floor(self.pokemon.getMaxHP / 2)
-                    self.pokemon.setCurrentHP(crash_damage)
-                else: # move does not inflict crash damage
-                    print("The attack missed!")
+        if self.pokemon.is_charging():
+                move = self.pokemon.getChargingMove()
+                print(self.pokemon.getName() + " used " + move.getName() + "!")
+                damage = self.damageCalc(move, other_pkmn)
+                other_pkmn.setCurrentHP(damage)
+                self.pokemon.resetChargingMove()
+                self.pokemon.set_charging(False)
                 return
-        if (move.getCategory() == "Physical" 
-        or move.getCategory() == "Special"):
-            damage = self.damageCalc(move, other_pkmn)
-            other_pkmn.setCurrentHP(damage)
-            self.secondaryEffectHandler(name, move, damage, other_pkmn)
-            return
-        else: # Move type is "Status"
-            self.executeStatus(move, other_pkmn)
-            return
+        else:
+            index = random.randint(0,3)
+            move = self.pokemon.getMoves(index)
+            name = move.getName()
+            print(self.pokemon.getName() + " used " + name + "!")
+            if name in SecondaryEffects.TWO_TURN:
+                print(self.pokemon.getName() + " is charging") # generic message, replace soon
+                self.pokemon.set_charging(True)
+                self.pokemon.setChargingMove(move)
+                print(move)
+                return
+            if move.getAccuracy() != "None":
+                if not move.accuracyRoll(random.randint(0,99)):
+                    if name in SecondaryEffects.CRASH:
+                        print(self.pokemon.getName() + " kept going and crashed!")
+                        crash_damage = math.floor(self.pokemon.getMaxHP / 2)
+                        self.pokemon.setCurrentHP(crash_damage)
+                    else: # move does not inflict crash damage
+                        print("The attack missed!")
+                    return
+            if (move.getCategory() == "Physical" 
+            or move.getCategory() == "Special"):
+                damage = self.damageCalc(move, other_pkmn)
+                other_pkmn.setCurrentHP(damage)
+                self.secondaryEffectHandler(name, move, damage, other_pkmn)
+                return
+            else: # Move type is "Status"
+                self.executeStatus(move, other_pkmn)
+                return
 
     def __str__(self):
         pkmn_string = "{} {}/{}".format(self.pokemon.getName(),
@@ -381,36 +413,51 @@ class HumanPlayer(Player):
             May inflict crash damage to attacking Pokemon
         """
         while True:
-            select = input("Select a move by typing the corresponding number: ")
-            try:
-                index = int(select)
-            except ValueError:
-                print("Please enter a number")
-                continue
-            if index >= 1 and index <= 4:
-                move = self.pokemon.getMoves(index - 1)
-                name = move.getName()
-                print(self.pokemon.getName() + " used " + name + "!")
-                if move.getAccuracy() != "None":
-                    if not move.accuracyRoll(random.randint(0,99)):
-                        if name in SecondaryEffects.CRASH:
-                            print(self.pokemon.getName() + " kept going and crashed!")
-                            crash_damage = math.floor(self.pokemon.getMaxHP / 2)
-                            self.pokemon.setCurrentHP(crash_damage)
-                        else: # move does not inflict crash damage
-                            print("The attack missed!")
-                        return
-                if (move.getCategory() == "Physical" 
-                or move.getCategory() == "Special"):
-                    damage = self.damageCalc(move, other_pkmn)
-                    other_pkmn.setCurrentHP(damage)
-                    self.secondaryEffectHandler(name, move, damage, other_pkmn)
-                    return  
-                else: # Move type is "Status"
-                    self.executeStatus(move, other_pkmn)
-                    return
+            if self.pokemon.is_charging():
+                move = self.pokemon.getChargingMove()
+                print(self.pokemon.getName() + " used " + move.getName() + "!")
+                damage = self.damageCalc(move, other_pkmn)
+                other_pkmn.setCurrentHP(damage)
+                self.pokemon.resetChargingMove()
+                self.pokemon.set_charging(False)
+                return
             else:
-                print("Please enter a number between 1 and 4")
+                select = input("Select a move by typing the corresponding number: ")
+                try:
+                    index = int(select)
+                except ValueError:
+                    print("Please enter a number")
+                    continue
+                if index >= 1 and index <= 4:
+                    move = self.pokemon.getMoves(index - 1)
+                    name = move.getName()
+                    print(self.pokemon.getName() + " used " + name + "!")
+                    if name in SecondaryEffects.TWO_TURN:
+                        print(self.pokemon.getName() + " is charging") # generic message, replace soon
+                        self.pokemon.set_charging(True)
+                        self.pokemon.setChargingMove(move)
+                        print(move)
+                        return
+                    if move.getAccuracy() != "None":
+                        if not move.accuracyRoll(random.randint(0,99)):
+                            if name in SecondaryEffects.CRASH:
+                                print(self.pokemon.getName() + " kept going and crashed!")
+                                crash_damage = math.floor(self.pokemon.getMaxHP / 2)
+                                self.pokemon.setCurrentHP(crash_damage)
+                            else: # move does not inflict crash damage
+                                print("The attack missed!")
+                            return
+                    if (move.getCategory() == "Physical" 
+                    or move.getCategory() == "Special"):
+                        damage = self.damageCalc(move, other_pkmn)
+                        other_pkmn.setCurrentHP(damage)
+                        self.secondaryEffectHandler(name, move, damage, other_pkmn)
+                        return  
+                    else: # Move type is "Status"
+                        self.executeStatus(move, other_pkmn)
+                        return
+                else:
+                    print("Please enter a number between 1 and 4")
     
     def __str__(self):
         pkmn_string = self.pokemon.getName() + """ {}/{}
