@@ -1,13 +1,14 @@
 import pandas as pd
 
 class Data:
-    movelist = pd.read_csv('PokemonSimulator\Gen1_Moves_update.csv')
-    pokedex = pd.read_csv("PokemonSimulator\Kanto_Pokemon_100.csv")
+    movelist = pd.read_csv(r'C:\Users\abcoo\OneDrive\Desktop\PokemonSimulator\Gen1_Moves.csv')
+    pokedex = pd.read_csv(r"C:\Users\abcoo\OneDrive\Desktop\PokemonSimulator\Kanto_Pokemon_100.csv")
 
 class Type:
     """ Establishes all 16 (including "None") Pokemon types.
         This includes their offensive relationships: super-effective,
-        not very effective, and not effective."""
+        not very effective, and not effective.
+    """
     NORMAL = "Normal"
     FIRE = "Fire"
     WATER = "Water"

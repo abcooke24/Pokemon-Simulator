@@ -1,6 +1,5 @@
 """ Human and computer Pokemon players """
 
-from audioop import mul
 import random, math
 from PokemonGenerator import Pokemon
 from Constants import Statuses, Type
@@ -118,6 +117,7 @@ class Player:
         Side Effects:
             Calls the Pokemon setCurrentStat method
         """
+        # HANDLE PRINTS HERE
         name = move.getName()
         if name in SecondaryEffects.SPEED_DROP_100:
             defender.setCurrentStat("Speed", -1)
@@ -189,6 +189,9 @@ class Player:
                 attacks_remaining = 4
             else: # multi_hit_roll == 8
                 attacks_remaining = 5
+        print_num = 0
+        if attacks_remaining > 1:
+            print_num = attacks_remaining
         while attacks_remaining > 0:
             # Attack / Defense (depicted as "A/D" on bulbapedia)
             if selected.getCategory() == "Physical":
@@ -227,6 +230,8 @@ class Player:
                     defender.setFlinch(True)
             # decrement the number of attacks remaining, ends the turn if 0
             attacks_remaining -= 1
+        if print_num != 0:
+            print("It hit {} times".format(print_num))
         return damage
 
     def executeStatus(self, selected, defender):
@@ -273,26 +278,39 @@ class Player:
                         return
         elif move in StatusMoves.STAT_BOOST or move in StatusMoves.STAT_DROP:
             # there will be more
+            # PRINT HERE
+            pkmn = user.getName()
+            other_pkmn = defender.getName()
             if move in StatusMoves.ATK_BOOST:
                 user.setCurrentStat("Attack", 1)
+                print(pkmn + "'s attack rose!")
             elif move in StatusMoves.ATK_DROP:
                 defender.setCurrentStat("Attack", -1)
+                print(other_pkmn + "'s attack fell!")
             if move in StatusMoves.DEF_BOOST:
                 user.setCurrentStat("Defense", 1)
+                print(pkmn + "'s defense rose!")
             elif move in StatusMoves.DEF_BOOST_2:
                 user.setCurrentStat("Defense", 2)
+                print(pkmn + "'s defense rose!")
             elif move in StatusMoves.DEF_DROP:
                 defender.setCurrentStat("Defense", -1)
+                print(other_pkmn + "'s defense fell!")
             elif move in StatusMoves.DEF_DROP_2:
                 defender.setCurrentStat("Defense", -2)
+                print(other_pkmn + "'s defense fell!")
             if move in StatusMoves.SPATK_BOOST:
                 user.setCurrentStat("SpAtk", 1)
+                print(pkmn + "'s special attack rose!")
             if move in StatusMoves.SPDEF_BOOST_2:
                 user.setCurrentStat("SpDef", 2)
+                print(pkmn + "'s special defense rose!")
             if move in StatusMoves.SPEED_BOOST_2:
                 user.setCurrentStat("Speed", 2)
-            elif move in StatusMoves .SPEED_DROP:
+                print(pkmn + "'s speed rose!")
+            elif move in StatusMoves.SPEED_DROP:
                 defender.setCurrentStat("Speed", -1)
+                print(other_pkmn + "'s speed fell!")
             return
         else: # move in Statuses.CRIT_BOOST (assumed to be "Focus Energy" for now)
             if user.hasCritBoost():

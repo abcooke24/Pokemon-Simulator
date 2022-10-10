@@ -1,0 +1,5 @@
+Blastoise: rest
+Butterfree: quiver dance
+Pidgeot: mirror move
+Slowpoke: rest
+Slowbro: rest

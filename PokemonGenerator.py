@@ -82,8 +82,17 @@ class Pokemon:
         self.currentSpAtk = self.spatk * 1
         self.currentSpDef = self.spdef * 1
         self.currentSpeed = self.speed * 1
+        self.accuracy = 100 # IMPLEMENT ACC CHANGES
         self.critBoost = False
         self.flinchedThisTurn = False
+
+        # This Pokemon's CURRENT stat stage; subject to change during battle; not gettable
+        self.ATKstage = 0
+        self.DEFstage = 0
+        self.SPATKstage = 0
+        self.SPDEFstage = 0
+        self.SPEEDstage = 0
+        self.ACCstage = 0
 
         # A different function will construct each move
         self.moves = self.setMoves((
@@ -255,7 +264,7 @@ class Pokemon:
         # stats can be slightly changed through multiple status changes; will fix later
         if newStatus == Statuses.BRN:
             atk_drop = self.currentAttack / 2
-            self.currentAttack = math.ceil(atk_drop)
+            self.currentAttack = math.ceil(atk_drop) # conflicts with statboosts/drops
             print(self.name + " was burned!")
         elif newStatus == Statuses.PRZ:
             speed_drop = math.ceil(self.currentSpeed / 4)
@@ -318,61 +327,93 @@ class Pokemon:
             Alters a current stat accordingly
         """
         if statname == "Attack":
+            new_stage = self.ATKstage + stages
             if stages > 0:
-                net_change = math.floor(self.attack * (stages/2))
-                print(self.name + "'s attack rose!")
+                shift = math.floor(self.attack * ((2 + new_stage)/2))
             elif stages < 0:
-                net_change = math.floor(self.attack / (((stages * -1) + 2)/2))
-                print(self.name + "'s attack fell!")
-            self.currentAttack += net_change
+                shift = math.floor(self.attack * (2/(2-new_stage)))
+            self.currentAttack = shift
+            self.ATKstage = new_stage
             if self.currentAttack > self.attack * 6:
                 self.currentAttack = self.attack * 6
+                self.ATKstage = 6
             elif self.currentAttack < self.attack / 6:
                 self.currentAttack = self.attack / 6
+                self.ATKstage = -6
+            if self.status == Statuses.BRN:
+                self.currentAttack /= 2
         elif statname == "Defense":
-            net_change = math.floor(self.defense * (stages/6))
-            if net_change > 0:
-                print(self.name + "'s defense rose!")
-            elif net_change < 0:
-                print(self.name + "'s defense fell!")
-            self.currentDefense += net_change
+            new_stage = self.DEFstage + stages
+            if stages > 0:
+                shift = math.floor(self.defense * ((2 + new_stage)/2))
+            elif stages < 0:
+                shift = math.floor(self.defense * (2/(2-new_stage)))
+            self.currentDefense = shift
+            self.DEFstage = new_stage
             if self.currentDefense > self.defense * 6:
                 self.currentDefense = self.defense * 6
+                self.DEFstage = 6
             elif self.currentDefense < self.defense / 6:
                 self.currentDefense = self.defense / 6
+                self.DEFstage = -6
         elif statname == "SpAtk":
-            net_change = math.floor(self.spatk * (stages/6))
-            if net_change > 0:
-                print(self.name + "'s special attack rose!")
-            elif net_change < 0:
-                print(self.name + "'s special attack fell!")
-            self.currentSpAtk += net_change
+            new_stage = self.SPATKstage + stages
+            if stages > 0:
+                shift = math.floor(self.spatk * ((2 + new_stage)/2))
+            elif stages < 0:
+                shift = math.floor(self.spatk * (2/(2-new_stage)))
+            self.currentSpAtk = shift
+            self.SPATKstage = new_stage
             if self.currentSpAtk > self.spatk * 6:
                 self.currentSpAtk = self.spatk * 6
+                self.SPATKstage = 6
             elif self.currentSpAtk < self.spatk / 6:
                 self.currentSpAtk = self.spatk / 6
+                self.SPATKstage = -6
         elif statname == "SpDef":
-            net_change = math.floor(self.spdef * (stages/6))
-            if net_change > 0:
-                print(self.name + "'s special defense rose!")
-            elif net_change < 0:
-                print(self.name + "'s special defense fell!")
-            self.currentSpDef += net_change
+            new_stage = self.SPDEFstage + stages
+            if stages > 0:
+                shift = math.floor(self.spdef * ((2 + new_stage)/2))
+            elif stages < 0:
+                shift = math.floor(self.spdef * (2/(2-new_stage)))
+            self.currentSpDef = shift
+            self.SPDEFstage = new_stage
             if self.currentSpDef > self.spdef * 6:
                 self.currentSpDef = self.spdef * 6
+                self.SPDEFstage = 6
             elif self.currentSpDef < self.spdef / 6:
                 self.currentSpDef = self.spdef / 6
+                self.SPDEFstage = -6
         elif statname == "Speed":
-            net_change = math.floor(self.speed * (stages/6))
-            if net_change > 0:
-                print(self.name + "'s speed rose!")
-            elif net_change < 0:
-                print(self.name + "'s speed fell!")
-            self.currentSpeed += net_change
+            new_stage = self.SPEEDstage + stages
+            if stages > 0:
+                shift = math.floor(self.speed * ((2 + new_stage)/2))
+            elif stages < 0:
+                shift = math.floor(self.speed * (2/(2-new_stage)))
+            self.currentSpeed = shift
+            self.SPEEDstage = new_stage
             if self.currentSpeed > self.speed * 6:
                 self.currentSpeed = self.speed * 6
+                self.SPEEDstage = 6
             elif self.currentSpeed < self.speed / 6:
                 self.currentSpeed = self.speed / 6
+                self.SPEEDstage = -6
+            if self.status == Statuses.PRZ:
+                self.currentSpeed /= 2
+        elif statname == "Accuracy":
+            new_stage = self.ACCstage + stages
+            if stages > 0:
+                shift = math.floor(100 * ((2 + new_stage)/2))
+            elif stages < 0:
+                shift = math.floor(100 * (2/(2-new_stage)))
+            self.accuracy = shift
+            self.ACCstage = new_stage
+            if self.currentSpeed > 600:
+                self.accuracy = 600
+                self.ACCstage = 6
+            elif self.accuracy < 16:
+                self.accuracy = 16
+                self.ACCstage = -6
 
     def hasCritBoost(self):
         if self.critBoost:

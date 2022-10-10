@@ -4,8 +4,8 @@ from Players import HumanPlayer, ComputerPlayer
 from Constants import Statuses
 
 # THIS IS WHERE MAIN IS LOCATED. EXAMPLE TEST SCRIPTS ARE BELOW
-# python PokemonSimulator/battle.py computer Player
-# python PokemonSimulator/battle.py Player computer
+# python battle.py computer Player
+# python battle.py Player computer
 
 """ This is a Pokemon battle simulator; it is unfinished.
 
@@ -74,11 +74,13 @@ class Battle:
         if status == Statuses.HEALTHY:
             pass
         elif status == Statuses.PRZ:
+            print()
             PRZ_roll = random.randint(0,3)
             if PRZ_roll == 0:
                 print(name + " is fully paralyzed!")
                 return False
         elif status == Statuses.SLP:
+            print()
             sleeping_turns = pokemon.getInflictedTurns()
             if sleeping_turns == 0:
                 print(name + " is fast asleep!")
@@ -99,6 +101,7 @@ class Battle:
                 pokemon.setStatus(Statuses.HEALTHY)
                 pokemon.resetInflictedTurns()
         elif status == Statuses.FRZ:
+            print()
             FRZ_roll = random.randint(0,4)
             if FRZ_roll == 0:
                 print(name + " thawed out!")
@@ -106,9 +109,10 @@ class Battle:
             else:
                 print(name + " is frozen solid!")
                 return False
-        else: # status == (TOX, PSN, OR BRN)
+        elif status in Statuses.CHIP_DAMAGE:
             return True
         if pokemon.is_confused():
+            print()
             confused_turns = pokemon.getConfusedTurns()
             print(name + " is confused!")
             if confused_turns >= 2:

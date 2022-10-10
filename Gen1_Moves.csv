@@ -1,69 +1,175 @@
-Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation
-1,Fire Punch,Fire,Physical,Tough,15,75,100,1
-2,Ice Punch,Ice,Physical,Beautiful,15,75,100,1
-3,Gust,Flying,Special,Clever,35,40,100,1
-4,Wing Attack,Flying,Physical,Cool,35,60,100,1
-5,Stomp,Normal,Physical,Tough,20,65,100,1
-6,Double Kick,Fighting,Physical,Cool,30,60,100,1
-7,Mega Kick,Normal,Physical,Cool,5,120,75,1
-8,Hi Jump Kick,Fighting,Physical,Cool,10,100,95,1
-9,Headbutt,Normal,Physical,Tough,15,70,100,1
-10,Horn Attack,Normal,Physical,Cool,25,65,100,1
-11,Tackle,Normal,Physical,Tough,35,40,None,1
-12,Body Slam,Normal,Physical,Tough,15,85,100,1
-13,Take Down,Normal,Physical,Tough,20,90,85,1
-14,Double-Edge,Normal,Physical,Tough,15,120,100,1
-15,Twineedle,Bug,Physical,Cool,20,25,100,1
-16,Pin Missile,Bug,Physical,Cool,20,25,None,1
-17,Icy Wind,Ice,Special,Beautiful,10,55,95,1
-18,Growl,Normal,Status,Cute,40,None,100,1
-19,Sing,Normal,Status,Cute,15,None,55,1
-20,Acid,Poison,Special,Clever,30,40,100,1
-21,Flamethrower,Fire,Special,Beautiful,15,90,100,1
-22,Hydro Pump,Water,Special,Beautiful,5,110,80,1
-23,Surf,Water,Special,Beautiful,15,90,100,1
-24,Ice Beam,Ice,Special,Beautiful,10,90,100,1
-25,Blizzard,Ice,Special,Beautiful,5,110,70,1
-26,Psybeam,Psychic,Special,Beautiful,20,65,100,1
-27,Aurora Beam,Ice,Special,Beautiful,20,65,100,1
-28,Hyper Beam,Normal,Special,Cool,5,150,90,1
-29,Drill Peck,Flying,Physical,Cool,20,80,100,1
-30,Submission,Fighting,Physical,Cool,20,80,80,1
-31,Seismic Toss,Fighting,Physical,Tough,20,100,100,1
-32,Strength,Normal,Physical,Tough,15,80,100,1(DOESN'T WORK ON PSYDUCK)
-33,Growth,Normal,Status,Beautiful,20,None,None,1
-34,Razor Leaf,Grass,Physical,Cool,25,55,95,1
-35,Solar Beam,Grass,Special,Cool,10,120,100,1
-36,Stun Spore,Grass,Status,Clever,30,None,75,1
-37,Sleep Powder,Grass,Status,Clever,15,None,75,1
-38,Petal Dance,Grass,Special,Beautiful,10,70,100,1
-39,Thunderbolt,Electric,Special,Cool,15,90,100,1
-40,Thunder Wave,Electric,Status,Cool,20,None,100,1
-41,Thunder,Electric,Special,Cool,10,110,70,1
-42,Rock Throw,Rock,Physical,Tough,15,50,None,1
-43,Earthquake,Ground,Physical,Tough,10,100,100,1
-44,Dig,Ground,Physical,Tough,10,60,100,1
-45,Confusion,Psychic,Special,Clever,25,50,100,1
-46,Psychic,Psychic,Special,Clever,10,90,100,1
-47,Quick Attack,Normal,Physical,Cool,30,40,100,1
-48,Defense Curl,Normal,Status,Cute,40,None,None,1
-49,Focus Energy,Normal,Status,Cool,30,None,None,1
-50,Selfdestruct,Normal,Physical,Beautiful,5,200,100,1
-51,Egg Bomb,Normal,Physical,Cute,10,100,75,1
-52,Sludge,Poison,Special,Tough,20,65,100,1
-53,Fire Blast,Fire,Special,Beautiful,5,110,85,1
-54,Waterfall,Water,Physical,Tough,15,80,100,1
-55,Swift,Normal,Special,Cool,20,60,None,1
-56,Leech Life,Bug,Physical,Clever,10,80,100,1
-56,Dragonbreath,Dragon,Special,Clever,10,80,100,1
-58,Dizzy Punch,Normal,Physical,Cute,10,70,100,1
-59,Splash,Normal,Status,Cute,40,None,None,1
-60,Crabhammer,Water,Physical,Tough,10,100,None,1
-61,Bonemerang,Ground,Physical,Tough,10,120,90,1
-62,Rock Slide,Rock,Physical,Tough,10,75,90,1
-63,Hyper Fang,Normal,Physical,Cool,15,80,90,1
-64,Tri Attack,Normal,Special,Beautiful,10,80,100,1
-65,Super Fang,Normal,Physical,Tough,10,100,90,1
-66,Slash,Normal,Physical,Cool,20,70,100,1
-67,Fury Cutter,Bug,Physical,Cool,35,40,100,1
-68,Sludge Bomb,Poison,Special,Tough,20,65,100,1
+Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Implementation,Effect
+1,Pound,Normal,Physical,Tough,35,40,100,1,Y,N/A
+2,Karate Chop,Fighting,Physical,Tough,25,50,100,1,Y,High-Crit
+3,Double Slap,Normal,Physical,Cute,10,15,85,1,T,Multi-Hit
+4,Comet Punch,Normal,Physical,Tough,15,18,85,1,T,Multi-Hit
+5,Mega Punch,Normal,Physical,Tough,20,80,85,1,Y,N/A
+6,Pay Day,Normal,Physical,Clever,20,40,100,1,Y,N/A
+7,Fire Punch,Fire,Physical,Tough,15,75,100,1,Y,BRN10
+8,Ice Punch,Ice,Physical,Beautiful,15,75,100,1,Y,FRZ10
+9,Thunder Punch,Electric,Physical,Cool,15,75,100,1,Y,PRZ10
+10,Scratch,Normal,Physical,Tough,35,40,100,1,Y,N/A
+11,Vice Grip,Normal,Physical,Tough,30,55,100,1,Y,N/A
+12,Guillotine,Normal,Physical,Cool,5,None,None,1,NN,OHKO
+13,Razor Wind,Normal,Special,Cool,10,80,None,1,T,2Turn
+14,Swords Dance,Normal,Status,Beautiful,20,None,None,1,Y,N/A
+15,Cut,Normal,Physical,Cool,30,50,95,1,Y,N/A
+16,Gust,Flying,Special,Clever,35,40,100,1,Y,2xAirborne
+17,Wing Attack,Flying,Physical,Cool,35,60,100,1,Y,N/A
+18,Whirlwind,Normal,Status,Clever,20,None,None,1,NN,Switch
+19,Fly,Flying,Physical,Clever,15,90,95,1,T,2Turn
+20,Bind,Normal,Physical,Tough,20,15,None,1,T,Trap
+21,Slam,Normal,Physical,Tough,20,80,75,1,Y,N/A
+22,Vine Whip,Grass,Physical,Cool,25,45,100,1,Y,N/A
+23,Stomp,Normal,Physical,Tough,20,65,100,1,YNS,Flinch30
+24,Double Kick,Fighting,Physical,Cool,30,30,100,1,T,2Hit
+25,Mega Kick,Normal,Physical,Cool,5,120,75,1,Y,N/A
+26,Jump Kick,Fighting,Physical,Cool,10,100,95,1,YNS,Crash
+27,Rolling Kick,Fighting,Physical,Cool,15,60,85,1,YNS,Flinch30
+28,Sand Attack,Ground,Status,Cute,15,None,100,1,N,ACC Drop
+29,Headbutt,Normal,Physical,Tough,15,70,100,1,YNS,Flinch30
+30,Horn Attack,Normal,Physical,Cool,25,65,100,1,Y,N/A
+31,Fury Attack,Normal,Physical,Cool,20,15,85,1,T,Multi-Hit
+32,Horn Drill,Normal,Physical,Cool,5,None,None,1,NN,OHKO
+33,Tackle,Normal,Physical,Tough,35,40,None,1,Y,N/A
+34,Body Slam,Normal,Physical,Tough,15,85,100,1,YNS,PRZ10
+35,Wrap,Normal,Physical,Tough,20,15,None,1,T,Trap
+36,Take Down,Normal,Physical,Tough,20,90,85,1,YNS,Recoil4
+37,Thrash,Normal,Physical,Tough,10,120,100,1,YNS,Thrash-like
+38,Double-Edge,Normal,Physical,Tough,15,120,100,1,YNS,Recoil3
+39,Tail Whip,Normal,Status,Cute,30,None,100,1,Y,DEFdrop
+40,Poison Sting,Poison,Physical,Clever,35,15,100,1,YNS,PSN30
+41,Twineedle,Bug,Physical,Cool,20,25,100,1,T,2Hit
+42,Pin Missile,Bug,Physical,Cool,20,25,None,1,T,Multi-Hit
+43,Leer,Normal,Status,Cool,30,None,100,1,Y,DEFdrop
+44,Bite,Dark,Physical,Tough,25,60,100,1,N,Flinch30
+45,Growl,Normal,Status,Cute,40,None,100,1,Y,ATKdrop
+46,Roar,Normal,Status,Cool,20,None,None,1,NN,Switch
+47,Sing,Normal,Status,Cute,15,None,55,1,Y,SLP Inflict
+48,Supersonic,Normal,Status,Clever,20,None,55,1,N,Confuse Inflict
+49,Sonic Boom,Normal,Special,Cool,20,None,90,1,N,SetDamage
+50,Disable,Normal,Status,Clever,20,None,None,1,N,Disable
+51,Acid,Poison,Special,Clever,30,40,100,1,YNS,SpdefDrop10
+52,Ember,Fire,Special,Cute,25,40,100,1,YNS,BRN10
+53,Flamethrower,Fire,Special,Beautiful,15,90,100,1,YNS,BRN10
+54,Mist,Ice,Status,Beautiful,30,None,None,1,N,Status Protection
+55,Water Gun,Water,Special,Cute,25,40,100,1,Y,N/A
+56,Hydro Pump,Water,Special,Beautiful,5,110,80,1,Y,N/A
+57,Surf,Water,Special,Beautiful,15,90,100,1,Y,N/A
+58,Ice Beam,Ice,Special,Beautiful,10,90,100,1,YNS,FRZ10
+59,Blizzard,Ice,Special,Beautiful,5,110,None,1,YNS,FRZ10
+60,Psybeam,Psychic,Special,Beautiful,20,65,100,1,YNS,Confuse10
+61,Bubble Beam,Water,Special,Beautiful,20,65,100,1,YNS,SpeedDrop10
+62,Aurora Beam,Ice,Special,Beautiful,20,65,100,1,YNS,AttackDrop10
+63,Hyper Beam,Normal,Special,Cool,5,150,90,1,YNS,Recharge
+64,Peck,Flying,Physical,Cool,35,35,100,1,Y,N/A
+65,Drill Peck,Flying,Physical,Cool,20,80,100,1,Y,N/A
+66,Submission,Fighting,Physical,Cool,20,80,80,1,YNS,Recoil4
+67,Low Kick,Fighting,Physical,Tough,20,None,None,1,NN,Weight
+68,Counter,Fighting,Physical,Tough,20,None,100,1,N,Physical Retaliation 
+69,Seismic Toss,Fighting,Physical,Tough,20,None,100,1,N,SetDamage
+70,Strength,Normal,Physical,Tough,15,80,100,1,Y,N/A
+71,Absorb,Grass,Special,Clever,25,20,100,1,YNS,Absorb
+72,Mega Drain,Grass,Special,Clever,15,40,100,1,YNS,Absorb
+73,Leech Seed,Grass,Status,Clever,10,None,90,1,N,Absorb
+74,Growth,Normal,Status,Beautiful,20,None,None,1,Y,Atk and Spatk Boost
+75,Razor Leaf,Grass,Physical,Cool,25,55,95,1,YNS,High-Crit
+76,Solar Beam,Grass,Special,Cool,10,120,100,1,T,2Turn
+77,Poison Powder,Poison,Status,Clever,35,None,75,1,Y,PSN Inflict
+78,Stun Spore,Grass,Status,Clever,30,None,75,1,Y,PRZ Inflict
+79,Sleep Powder,Grass,Status,Clever,15,None,75,1,Y,SLP Inflict
+80,Petal Dance,Grass,Special,Beautiful,10,120,100,1,T,Thrash-like
+81,String Shot,Bug,Status,Clever,40,None,95,1,Y,Speed Drop
+82,Dragon Rage,Dragon,Special,Cool,10,None,100,1,N,SetDamage
+83,Fire Spin,Fire,Special,Beautiful,15,35,None,1,T,Trap
+84,Thunder Shock,Electric,Special,Cool,30,40,100,1,YNS,PRZ10
+85,Thunderbolt,Electric,Special,Cool,15,90,100,1,YNS,PRZ10
+86,Thunder Wave,Electric,Status,Cool,20,None,None,1,Y,PRZ Inflict
+87,Thunder,Electric,Special,Cool,10,110,70,1,YNS,PRZ30
+88,Rock Throw,Rock,Physical,Tough,15,50,90,1,Y,N/A
+89,Earthquake,Ground,Physical,Tough,10,100,100,1,Y,N/A
+90,Fissure,Ground,Physical,Tough,5,None,None,1,NN,OHKO
+91,Dig,Ground,Physical,Tough,10,80,100,1,T,2Turn
+92,Toxic,Poison,Status,Clever,10,None,None,1,Y,TOX Inflict
+93,Confusion,Psychic,Special,Clever,25,50,100,1,YNS,Confuse10
+94,Psychic,Psychic,Special,Clever,10,90,100,1,Y,SpdefDrop10
+95,Hypnosis,Psychic,Status,Clever,20,None,60,1,Y,SLP Inflict
+96,Meditate,Psychic,Status,Beautiful,40,None,None,1,Y,ATKboost
+97,Agility,Psychic,Status,Cool,30,None,None,1,Y,SPEEDboost2
+98,Quick Attack,Normal,Physical,Cool,30,40,100,1,T,Priority1
+99,Rage,Normal,Physical,Tough,20,20,100,1,T,Consecutive
+100,Teleport,Psychic,Status,Cool,20,None,None,1,NN,Switchout
+101,Night Shade,Ghost,Special,Clever,15,None,100,1,N,SetDamage
+102,Mimic,Normal,Status,Cute,10,None,None,1,NN,Mimic
+103,Screech,Normal,Status,Clever,40,None,85,1,Y,DEFdrop2
+104,Double Team,Normal,Status,Cool,15,None,None,1,N,EvasiveBoost
+105,Recover,Normal,Status,Clever,10,None,None,1,N,HPboost
+106,Harden,Normal,Status,Tough,30,None,None,1,Y,DEFboost
+107,Minimize,Normal,Status,Cute,10,None,None,1,N,EvasiveBoost
+108,Smokescreen,Normal,Status,Clever,20,None,100,1,N,ACCdrop
+109,Confuse Ray,Ghost,Status,Clever,10,None,100,1,N,Confuse Inflict
+110,Withdraw,Water,Status,Cute,40,None,None,1,Y,DEFboost
+111,Defense Curl,Normal,Status,Cute,40,None,None,1,Y,DEFboost
+112,Barrier,Psychic,Status,Cool,20,None,None,1,Y,DEFboost2
+113,Light Screen,Psychic,Status,Beautiful,30,None,None,1,NN,Screen
+114,Haze,Ice,Status,Beautiful,30,None,None,1,N,StatReset
+115,Reflect,Psychic,Status,Clever,20,None,None,1,NN,Screen
+116,Focus Energy,Normal,Status,Cool,30,None,None,1,Y,CritBoost
+117,Bide,Normal,Physical,Tough,10,None,None,1,NN,DoubleDamage
+118,Metronome,Normal,Status,Cute,10,None,None,1,N,RandomMove
+119,Mirror Move,Flying,Status,Clever,20,None,None,1,NN,CopyMove
+120,Self-Destruct,Normal,Physical,Beautiful,5,200,100,1,NN,Selfdestruct
+121,Egg Bomb,Normal,Physical,Cute,10,100,75,1,Y,N/A
+122,Lick,Ghost,Physical,Cute,30,30,100,1,YNS,PRZ30
+123,Smog,Poison,Special,Tough,20,30,70,1,YNS,PSN40
+124,Sludge,Poison,Special,Tough,20,65,100,1,YNS,PSN30
+125,Bone Club,Ground,Physical,Tough,20,65,85,1,YNS,Flinch10
+126,Fire Blast,Fire,Special,Beautiful,5,110,85,1,YNS,BRN10
+127,Waterfall,Water,Physical,Tough,15,80,100,1,YNS,Flinch20
+128,Clamp,Water,Physical,Tough,15,35,None,1,T,Trap
+129,Swift,Normal,Special,Cool,20,60,None,1,Y,N/A
+130,Skull Bash,Normal,Physical,Tough,10,130,100,1,T,2Hit
+131,Spike Cannon,Normal,Physical,Cool,15,20,100,1,T,Multi-Hit
+132,Constrict,Normal,Physical,Tough,35,10,100,1,YNS,SpeedDrop10
+133,Amnesia,Psychic,Status,Cute,20,None,None,1,Y,SpdefBoost2
+134,Kinesis,Psychic,Status,Clever,15,None,80,1,N,ACCdrop
+135,Soft-Boiled,Normal,Status,Cute,10,None,None,1,N,HPboost
+136,High Jump Kick,Fighting,Physical,Cool,10,130,90,1,YNS,Crash
+137,Glare,Normal,Status,Tough,30,None,None,1,Y,PRZ Inflict
+138,Dream Eater,Psychic,Special,Clever,15,100,100,1,NN,Absorb
+139,Poison Gas,Poison,Status,Clever,40,None,None,1,Y,PSN Inflict
+140,Barrage,Normal,Physical,Cute,20,15,85,1,T,Multi-Hit
+141,Leech Life,Bug,Physical,Clever,10,80,100,1,YNS,Absorb
+142,Lovely Kiss,Normal,Status,Beautiful,10,None,75,1,Y,SLP Inflict
+143,Sky Attack,Flying,Physical,Cool,5,140,90,1,T,2Turn
+144,Transform,Normal,Status,Clever,10,None,None,1,NN,Misc
+145,Bubble,Water,Special,Cute,30,40,100,1,YNS,SpeedDrop10
+146,Dizzy Punch,Normal,Physical,Cute,10,70,100,1,YNS,Confuse20
+147,Spore,Grass,Status,Beautiful,15,None,100,1,Y,SLP Inflict
+148,Flash,Normal,Status,Beautiful,20,None,None,1,N,ACCdrop
+149,Psywave,Psychic,Special,Clever,15,None,None,1,N,RandomPower
+150,Splash,Normal,Status,Cute,40,None,None,1,Y,N/A
+151,Acid Armor,Poison,Status,Tough,20,None,None,1,Y,DEFboost2
+152,Crabhammer,Water,Physical,Tough,10,100,None,1,YNS,High-Crit
+153,Explosion,Normal,Physical,Beautiful,5,250,100,1,NN,Selfdestruct
+154,Fury Swipes,Normal,Physical,Tough,15,18,80,1,T,Multi-Hit
+155,Bonemerang,Ground,Physical,Tough,10,50,90,1,T,2Hit
+156,Rest,Psychic,Status,Cute,10,None,None,1,N,Self SLP Inflict
+157,Rock Slide,Rock,Physical,Tough,10,75,90,1,YNS,Flinch30
+158,Hyper Fang,Normal,Physical,Cool,15,80,90,1,YNS,High-Crit 
+159,Sharpen,Normal,Status,Cute,30,None,None,1,Y,ATKboost
+160,Conversion,Normal,Status,Beautiful,30,None,None,1,N,Can't remember lol
+161,Tri Attack,Normal,Special,Beautiful,10,80,100,1,YNS,PBF10
+162,Super Fang,Normal,Physical,Tough,10,None,90,1,N,HalfChip
+163,Slash,Normal,Physical,Cool,20,70,100,1,YNS,High-Crit
+164,Substitute,Normal,Status,Cute,10,None,None,1,NN,Unique
+165,Brave Bird,Flying,Physical,Cute,15,120,100,4,Y,Recoil3
+166,Sludge Bomb,Poison,Special,Tough,10,90,100,2,Y,PSN30
+167,Fury Cutter,Bug,Physical,Cool,20,40,95,2,N,Consecutive
+168,Dragon Breath,Dragon,Special,Cool,20,60,100,2,Y,PRZ30
+169,Selfdestruct,Normal,Physical,Beauty,5,200,100,1,N,Selfdestruct
+170,Hi Jump Kick,Fighting,Physical,Cool,10,130,90,1,Y,Crash
+171,Headbutt,Normal,Physical,Tough,15,70,100,1,Y,Flinch30
+172,Icy Wind,Ice,Special,Beauty,15,55,95,2,Y,SpeedDrop100
+173,Power Whip,Grass,Physical,Beauty,10,120,85,4,Y,N/A
+174,Air Slash,Flying,Special,Cool,15,75,95,4,Y,Flinch30
