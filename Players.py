@@ -215,6 +215,7 @@ class Player:
                 else: # not a high-crit move
                     crit_check = random.randint(0,15)
             if self.criticalHit(crit_check):
+                # THIS DOES NOT ACCOUNT FOR STAT DROPS, MAKE IT DO THAT
                 damage *= 2
                 print("A critical hit!")
             # Checks for same type attack bonus (STAB)
@@ -231,7 +232,10 @@ class Player:
             # decrement the number of attacks remaining, ends the turn if 0
             attacks_remaining -= 1
         if print_num != 0:
-            print("It hit {} times".format(print_num))
+            print("It hit {} times!".format(print_num))
+        if name in SecondaryEffects.THRASH_LIKE:
+            self.pokemon.incrementThrashTurns()
+            self.pokemon.setThrashMove(selected)
         return damage
 
     def executeStatus(self, selected, defender):
@@ -312,6 +316,7 @@ class Player:
                 defender.setCurrentStat("Speed", -1)
                 print(other_pkmn + "'s speed fell!")
             return
+        # THERE NEEDS TO BE A CONFUSION SECTION HERE
         else: # move in Statuses.CRIT_BOOST (assumed to be "Focus Energy" for now)
             if user.hasCritBoost():
                 print("But it failed!")
@@ -371,6 +376,18 @@ class ComputerPlayer(Player):
                 self.pokemon.resetChargingMove()
                 self.pokemon.set_charging(False)
                 return
+        elif self.pokemon.getThrashTurns() > 0:
+            move = self.pokemon.getThrashMove()
+            name = move.getName()
+            print(self.pokemon.getName() + " used " + name + "!")
+            damage = self.damageCalc(move, other_pkmn) # thrash turns incremented here
+            thrash_roll = random.randint(2,3)
+            if self.pokemon.getThrashTurns() > 3 or (self.pokemon.getThrashTurns() == 2
+            and thrash_roll == 2):
+                self.pokemon.resetThrashMove()
+                self.pokemon.resetThrashTurns()
+                self.pokemon.set_confusion(True)
+                print(self.pokemon.getName() + " is confused due to fatigue!")
         else:
             index = random.randint(0,3)
             move = self.pokemon.getMoves(index)
@@ -432,6 +449,7 @@ class HumanPlayer(Player):
         """
         while True:
             if self.pokemon.is_charging():
+                # DISTINGUISH BETWEEN DIFFERENT TYPES
                 move = self.pokemon.getChargingMove()
                 print(self.pokemon.getName() + " used " + move.getName() + "!")
                 damage = self.damageCalc(move, other_pkmn)
@@ -439,6 +457,18 @@ class HumanPlayer(Player):
                 self.pokemon.resetChargingMove()
                 self.pokemon.set_charging(False)
                 return
+            elif self.pokemon.getThrashTurns() > 0:
+                move = self.pokemon.getThrashMove()
+                name = move.getName()
+                print(self.pokemon.getName() + " used " + name + "!")
+                damage = self.damageCalc(move, other_pkmn) # thrash turns incremented here
+                thrash_roll = random.randint(2,3)
+                if self.pokemon.getThrashTurns() > 3 or (self.pokemon.getThrashTurns() == 2
+                and thrash_roll == 2):
+                    self.pokemon.resetThrashMove()
+                    self.pokemon.resetThrashTurns()
+                    self.pokemon.set_confusion(True)
+                    print(self.pokemon.getName() + " is confused due to fatigue!")
             else:
                 select = input("Select a move by typing the corresponding number: ")
                 try:

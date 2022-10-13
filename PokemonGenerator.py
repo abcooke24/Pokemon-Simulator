@@ -63,6 +63,8 @@ class Pokemon:
         self.recharging = False
         self.charging = False
         self.chargingMove = None
+        self.thrash_turns = 0
+        self.thrash_move = None
 
         # Sets stats with the setStats; not subject to change; not gettable
         self.EVs = self.setEVs()
@@ -477,3 +479,21 @@ class Pokemon:
 
     def resetChargingMove(self):
         self.chargingMove = None
+    
+    def getThrashTurns(self):
+        return self.thrash_turns
+    
+    def incrementThrashTurns(self):
+        self.thrash_turns += 1
+
+    def resetThrashTurns(self):
+        self.thrash_turns = 0
+
+    def getThrashMove(self):
+        return self.thrash_move
+
+    def setThrashMove(self, move):
+        self.thrash_move = move
+
+    def resetThrashMove(self):
+        self.thrash_move = None

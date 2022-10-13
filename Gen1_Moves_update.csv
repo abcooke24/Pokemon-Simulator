@@ -156,18 +156,20 @@ Index,Name,Type,Category,Contest,PP,Power,Accuracy,Generation,Implementation,Eff
 155,Bonemerang,Ground,Physical,Tough,10,50,90,1,T,2Hit
 156,Rest,Psychic,Status,Cute,10,None,None,1,N,Self SLP Inflict
 157,Rock Slide,Rock,Physical,Tough,10,75,90,1,YNS,Flinch30
-158,Hyper Fang,Normal,Physical,Cool,15,80,90,1,YNS,High-Crit
+158,Hyper Fang,Normal,Physical,Cool,15,80,90,1,YNS,High-Crit 
 159,Sharpen,Normal,Status,Cute,30,None,None,1,Y,ATKboost
 160,Conversion,Normal,Status,Beautiful,30,None,None,1,N,Can't remember lol
 161,Tri Attack,Normal,Special,Beautiful,10,80,100,1,YNS,PBF10
 162,Super Fang,Normal,Physical,Tough,10,None,90,1,N,HalfChip
 163,Slash,Normal,Physical,Cool,20,70,100,1,YNS,High-Crit
 164,Substitute,Normal,Status,Cute,10,None,None,1,NN,Unique
-165,Hit Self,None,Physical,Who Knows,N/A,40,None,1,Y,Confusion Only
+165,Brave Bird,Flying,Physical,Cute,15,120,100,4,Y,Recoil3
 166,Sludge Bomb,Poison,Special,Tough,10,90,100,2,Y,PSN30
 167,Fury Cutter,Bug,Physical,Cool,20,40,95,2,N,Consecutive
 168,Dragon Breath,Dragon,Special,Cool,20,60,100,2,Y,PRZ30
 169,Selfdestruct,Normal,Physical,Beauty,5,200,100,1,N,Selfdestruct
 170,Hi Jump Kick,Fighting,Physical,Cool,10,130,90,1,Y,Crash
 171,Headbutt,Normal,Physical,Tough,15,70,100,1,Y,Flinch30
-172,Icy Wind,Ice,Special,Beauty,15,55,95,2,N,SpeedDrop100
+172,Icy Wind,Ice,Special,Beauty,15,55,95,2,Y,SpeedDrop100
+173,Power Whip,Grass,Physical,Beauty,10,120,85,4,Y,N/A
+174,Air Slash,Flying,Special,Cool,15,75,95,4,Y,Flinch30

@@ -64,6 +64,7 @@ class Battle:
             status changes.
         """
         # Make functions out of repeated code (eventually)
+        # PUT THIS IN PLAYER; ALLOW PKMN TO TRY AND USE MOVE
         status = pokemon.getStatus()
         name = pokemon.getName()
         if (pokemon.is_recharging() and pokemon.getStatus() != Statuses.SLP
